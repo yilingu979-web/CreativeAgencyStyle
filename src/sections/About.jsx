@@ -47,14 +47,13 @@ const About = () => {
         <section ref={containerRef} className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-secondary text-primary px-6 md:px-20 py-20 overflow-hidden">
 
             {/* Visual Side */}
-            <div className="w-full md:w-1/2 h-[50vh] md:h-[80vh] relative overflow-hidden mb-10 md:mb-0">
+            <div className="w-full aspect-[9/16] md:w-auto md:h-[80vh] relative overflow-hidden mb-10 md:mb-0 md:shrink-0">
                 <div ref={imageRef} className="absolute inset-0 w-full h-full">
                     <img
                         src="/assets/kouji-church.jpg"
                         alt="教堂内部的立柱与彩色玻璃窗"
-                        className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                        className="w-full h-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-primary/20"></div>
                 </div>
             </div>
 
@@ -62,7 +61,8 @@ const About = () => {
             <div ref={textRef} className="w-full md:w-1/2 md:pl-20 flex flex-col gap-6">
                 <h2 className="text-sm font-bold tracking-[0.2em] uppercase text-neutral/60">Who We Are</h2>
                 <h3 className="text-4xl md:text-6xl font-display font-bold leading-tight relative">
-                    我们重新想象影像。
+                    <span className="block whitespace-nowrap">我们重新</span>
+                    <span className="block whitespace-nowrap">想象影像。</span>
                 </h3>
                 <p className="text-lg md:text-xl font-sans text-neutral/80 leading-relaxed max-w-md">
                     我们聚集了一群对影像充满热情的创作者和技术探索者，用 AI 拓展影像创作的可能，让想象成为一种真实可见的体验。
