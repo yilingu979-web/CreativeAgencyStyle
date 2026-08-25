@@ -49,8 +49,8 @@ const Footer = () => {
     return (
         <footer className="bg-primary text-secondary pt-20 pb-12 px-6 md:px-20 min-h-[70vh] flex flex-col justify-between">
             <div className="flex flex-col md:flex-row justify-between items-start gap-16 md:gap-12 lg:gap-24">
-                <div className="w-full md:w-5/12 flex flex-col items-start">
-                    <h2 className="text-5xl md:text-7xl lg:text-8xl font-display font-bold leading-tight" data-cursor="hover">
+                <div className="w-full md:w-5/12 flex flex-col items-center md:items-start">
+                    <h2 className="w-full whitespace-nowrap text-center md:text-left text-[clamp(2.2rem,12vw,3rem)] md:text-7xl lg:text-8xl font-display font-bold leading-tight" data-cursor="hover">
                         联系我们
                     </h2>
                     <p className="mt-4 text-lg md:text-2xl font-display font-bold tracking-[0.12em] whitespace-nowrap text-secondary/70">

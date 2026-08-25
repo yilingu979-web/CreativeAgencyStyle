@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
-import { projects, shouldPlayPreview } from './workModel';
+import { isDragGesture, projects, shouldPlayPreview } from './workModel';
 import './Work.css';
 
 const Work = () => {
@@ -8,7 +8,7 @@ const Work = () => {
     const previewRefs = useRef(new Map());
     const visiblePreviews = useRef(new Set());
     const fullVideoRef = useRef(null);
-    const drag = useRef({ active: false, moved: false, startX: 0, startScroll: 0 });
+    const drag = useRef({ active: false, suppressClick: false, startX: 0, startScroll: 0 });
     const [activeProject, setActiveProject] = useState(null);
 
     const syncPreviews = useCallback((openFilm = activeProject) => {
@@ -50,7 +50,7 @@ const Work = () => {
     }, [activeProject, closeFilm]);
 
     const openFilm = (project) => {
-        if (drag.current.moved) return;
+        if (drag.current.suppressClick) return;
         syncPreviews(project);
         flushSync(() => setActiveProject(project));
         fullVideoRef.current?.play().catch(() => {});
@@ -58,18 +58,18 @@ const Work = () => {
 
     const startDrag = (event) => {
         if (event.button !== 0) return;
-        drag.current = { active: true, moved: false, startX: event.clientX, startScroll: trackRef.current.scrollLeft };
+        drag.current = { active: true, suppressClick: false, startX: event.clientX, startScroll: trackRef.current.scrollLeft };
         trackRef.current.setPointerCapture(event.pointerId);
     };
     const moveDrag = (event) => {
         if (!drag.current.active) return;
         const distance = event.clientX - drag.current.startX;
-        if (Math.abs(distance) > 5) drag.current.moved = true;
+        if (isDragGesture(distance)) drag.current.suppressClick = true;
         trackRef.current.scrollLeft = drag.current.startScroll - distance;
     };
     const endDrag = () => {
         drag.current.active = false;
-        requestAnimationFrame(() => { drag.current.moved = false; });
+        requestAnimationFrame(() => { drag.current.suppressClick = false; });
     };
 
     return (
@@ -86,7 +86,13 @@ const Work = () => {
                     <button type="button" key={project.id} className="selected-works__card" onClick={() => openFilm(project)} aria-label={`播放${project.title}完整版`} data-cursor="text" data-cursor-text="VIEW">
                         <video ref={(node) => node ? previewRefs.current.set(project.id, node) : previewRefs.current.delete(project.id)} className="selected-works__preview" data-project-id={project.id} src={project.preview} muted autoPlay loop playsInline preload="metadata" />
                         <span className="selected-works__shade" />
-                        <span className="selected-works__label"><span className="selected-works__play" aria-hidden="true">▶</span><span>{project.title}</span></span>
+                        <span className="selected-works__label">
+                            <span className="selected-works__play" aria-hidden="true">▶</span>
+                            <span className="selected-works__meta">
+                                <span className="selected-works__card-title">{project.cardTitle}</span>
+                                <span className="selected-works__category">{project.category}</span>
+                            </span>
+                        </span>
                     </button>
                 ))}
                 <div className="selected-works__end" aria-hidden="true" />
