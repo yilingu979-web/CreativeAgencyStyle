@@ -73,7 +73,7 @@ const Work = () => {
     };
 
     return (
-        <section className="selected-works relative h-screen bg-primary text-secondary overflow-hidden" aria-labelledby="selected-works-title">
+        <section className="selected-works relative h-screen bg-transparent text-secondary overflow-hidden" aria-labelledby="selected-works-title">
             <div className="selected-works__eyebrow absolute top-10 left-10 md:left-20 z-10">
                 <h2 className="text-sm font-bold tracking-[0.2em] uppercase text-secondary/60">Selected Works</h2>
             </div>

@@ -12,9 +12,23 @@
 
 @layer base {
   body {
-    @apply bg-primary text-secondary cursor-none selection:bg-accent selection:text-primary;
+    @apply bg-primary text-secondary selection:bg-accent selection:text-primary;
     overscroll-behavior: none;
   }
+}
+
+.fluid-cursor {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  touch-action: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fluid-cursor { display: none; }
 }
 
 /* Lenis Scroll Styles */

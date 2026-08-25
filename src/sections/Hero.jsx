@@ -45,7 +45,7 @@ const Hero = () => {
     }, []);
 
     return (
-        <section ref={containerRef} className="relative h-screen flex flex-col justify-center items-center px-6 overflow-hidden bg-primary">
+        <section ref={containerRef} className="relative h-screen flex flex-col justify-center items-center px-6 overflow-hidden bg-transparent">
             <div className="absolute top-6 left-6 md:top-10 md:left-10 z-20 font-display text-lg md:text-xl font-semibold tracking-[0.3em] text-secondary">
                 扣寂
             </div>
