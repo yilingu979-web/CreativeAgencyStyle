@@ -1,85 +1,103 @@
-import React, { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
-
-const projects = [
-    { id: 1, title: 'Nebula', category: 'Web Design', image: 'https://images.unsplash.com/photo-1464802686167-b939a6910659?auto=format&fit=crop&q=80&w=800' },
-    { id: 2, title: 'Apex', category: 'Branding', image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=800' },
-    { id: 3, title: 'Velocity', category: 'Development', image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=800' },
-    { id: 4, title: 'Echo', category: 'Experience', image: 'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?auto=format&fit=crop&q=80&w=800' },
-    { id: 5, title: 'Mirage', category: 'Mobile App', image: 'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&q=80&w=1200' },
-];
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
+import { projects, shouldPlayPreview } from './workModel';
+import './Work.css';
 
 const Work = () => {
-    const containerRef = useRef(null);
-    const wrapperRef = useRef(null);
+    const trackRef = useRef(null);
+    const previewRefs = useRef(new Map());
+    const visiblePreviews = useRef(new Set());
+    const fullVideoRef = useRef(null);
+    const drag = useRef({ active: false, moved: false, startX: 0, startScroll: 0 });
+    const [activeProject, setActiveProject] = useState(null);
+
+    const syncPreviews = useCallback((openFilm = activeProject) => {
+        previewRefs.current.forEach((video, id) => {
+            if (shouldPlayPreview({ isVisible: visiblePreviews.current.has(id), hasOpenFilm: Boolean(openFilm) })) video.play().catch(() => {});
+            else video.pause();
+        });
+    }, [activeProject]);
+
+    const closeFilm = useCallback(() => {
+        fullVideoRef.current?.pause();
+        setActiveProject(null);
+        requestAnimationFrame(() => syncPreviews(null));
+    }, [syncPreviews]);
 
     useEffect(() => {
-        const wrapper = wrapperRef.current;
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                const id = entry.target.dataset.projectId;
+                if (entry.isIntersecting) visiblePreviews.current.add(id);
+                else visiblePreviews.current.delete(id);
+            });
+            syncPreviews();
+        }, { threshold: 0.35 });
+        previewRefs.current.forEach((video) => observer.observe(video));
+        return () => observer.disconnect();
+    }, [syncPreviews]);
 
-        // Horizontal Scroll
-        const scrollTween = gsap.to(wrapper, {
-            x: () => -(wrapper.scrollWidth - window.innerWidth),
-            ease: 'none',
-            scrollTrigger: {
-                trigger: containerRef.current,
-                pin: true,
-                scrub: 1,
-                start: 'top top',
-                end: () => `+=${wrapper.scrollWidth}`,
-                anticipatePin: 1
-            }
-        });
-
+    useEffect(() => {
+        if (!activeProject) return undefined;
+        const onKeyDown = (event) => event.key === 'Escape' && closeFilm();
+        const previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        window.addEventListener('keydown', onKeyDown);
         return () => {
-            scrollTween.kill();
+            document.body.style.overflow = previousOverflow;
+            window.removeEventListener('keydown', onKeyDown);
         };
-    }, []);
+    }, [activeProject, closeFilm]);
+
+    const openFilm = (project) => {
+        if (drag.current.moved) return;
+        syncPreviews(project);
+        flushSync(() => setActiveProject(project));
+        fullVideoRef.current?.play().catch(() => {});
+    };
+
+    const startDrag = (event) => {
+        if (event.button !== 0) return;
+        drag.current = { active: true, moved: false, startX: event.clientX, startScroll: trackRef.current.scrollLeft };
+        trackRef.current.setPointerCapture(event.pointerId);
+    };
+    const moveDrag = (event) => {
+        if (!drag.current.active) return;
+        const distance = event.clientX - drag.current.startX;
+        if (Math.abs(distance) > 5) drag.current.moved = true;
+        trackRef.current.scrollLeft = drag.current.startScroll - distance;
+    };
+    const endDrag = () => {
+        drag.current.active = false;
+        requestAnimationFrame(() => { drag.current.moved = false; });
+    };
 
     return (
-        <section ref={containerRef} className="relative h-screen bg-primary text-secondary overflow-hidden">
-            {/* Section Header (Absolute so it stays visible initially or moves with pin) */}
-            <div className="absolute top-10 left-10 md:left-20 z-10">
+        <section className="selected-works relative h-screen bg-primary text-secondary overflow-hidden" aria-labelledby="selected-works-title">
+            <div className="selected-works__eyebrow absolute top-10 left-10 md:left-20 z-10">
                 <h2 className="text-sm font-bold tracking-[0.2em] uppercase text-secondary/60">Selected Works</h2>
             </div>
-
-            <div ref={wrapperRef} className="flex h-full items-center pl-10 md:pl-20 gap-10 md:gap-20 w-[max-content]">
-                {/* Intro Text Card */}
-                <div className="w-[80vw] md:w-[30vw] shrink-0">
-                    <h3 className="text-5xl md:text-7xl font-display font-bold leading-none">
-                        Our <br />
-                        <span className="text-accent italic">Finest</span> <br />
-                        Work
-                    </h3>
-                </div>
-
-                {/* Project Cards */}
+            <div ref={trackRef} className="selected-works__track" onPointerDown={startDrag} onPointerMove={moveDrag} onPointerUp={endDrag} onPointerCancel={endDrag}>
+                <header className="selected-works__intro">
+                    <h3 id="selected-works-title" className="selected-works__title font-display font-bold"><span>精选</span><span className="selected-works__gold">作品</span></h3>
+                    <p className="selected-works__subtitle">Our Finest Work</p>
+                </header>
                 {projects.map((project) => (
-                    <div
-                        key={project.id}
-                        className="w-[80vw] md:w-[40vw] h-[60vh] md:h-[70vh] bg-neutral-900 relative group flex-shrink-0 cursor-none border border-white/10 overflow-hidden"
-                        data-cursor="text"
-                        data-cursor-text="VIEW"
-                    >
-                        <div
-                            className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                            style={{ backgroundImage: `url(${project.image})` }}
-                        >
-                            <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-500"></div>
-                        </div>
-
-                        <div className="absolute bottom-0 left-0 p-8 w-full bg-gradient-to-t from-black/80 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-500">
-                            <h4 className="text-3xl font-display font-bold">{project.title}</h4>
-                            <span className="text-sm font-sans text-accent">{project.category}</span>
-                        </div>
-                    </div>
+                    <button type="button" key={project.id} className="selected-works__card" onClick={() => openFilm(project)} aria-label={`播放${project.title}完整版`} data-cursor="text" data-cursor-text="VIEW">
+                        <video ref={(node) => node ? previewRefs.current.set(project.id, node) : previewRefs.current.delete(project.id)} className="selected-works__preview" data-project-id={project.id} src={project.preview} muted autoPlay loop playsInline preload="metadata" />
+                        <span className="selected-works__shade" />
+                        <span className="selected-works__label"><span className="selected-works__play" aria-hidden="true">▶</span><span>{project.title}</span></span>
+                    </button>
                 ))}
-
-                {/* End Space */}
-                <div className="w-[10vw]"></div>
+                <div className="selected-works__end" aria-hidden="true" />
             </div>
+            <button type="button" className="selected-works__next" onClick={() => trackRef.current?.scrollBy({ left: trackRef.current.clientWidth * 0.72, behavior: 'smooth' })} aria-label="浏览下一个作品"><span />→</button>
+            {activeProject && (
+                <div className="work-lightbox" role="dialog" aria-modal="true" aria-label={`${activeProject.title}完整版`} onMouseDown={(event) => event.target === event.currentTarget && closeFilm()}>
+                    <button type="button" className="work-lightbox__close" onClick={closeFilm} aria-label="关闭播放器">×</button>
+                    <video ref={fullVideoRef} className="work-lightbox__video" src={activeProject.full} controls autoPlay playsInline preload="metadata" />
+                </div>
+            )}
         </section>
     );
 };
