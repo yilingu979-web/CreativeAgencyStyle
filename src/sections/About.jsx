@@ -64,8 +64,8 @@ const About = () => {
                     <span className="block whitespace-nowrap">我们重新</span>
                     <span className="block whitespace-nowrap">想象影像。</span>
                 </h3>
-                <p className="text-lg md:text-xl font-sans text-neutral/80 leading-relaxed max-w-md">
-                    我们聚集了一群对影像充满热情的创作者和技术探索者，用 AI 拓展影像创作的可能，让想象成为一种真实可见的体验。
+                <p className="text-lg md:text-xl font-sans text-neutral/80 leading-relaxed max-w-md text-pretty [text-align:justify] [text-justify:inter-character]">
+                    我们聚集了一群对影像充满热情的创作者和技术探索者，用 AI 拓展影像创作的可能，让想象成为一种真实可见的<span className="whitespace-nowrap">体验</span>。
                 </p>
                 <div className="pt-8">
                     <button
