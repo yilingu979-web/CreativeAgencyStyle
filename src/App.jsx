@@ -14,7 +14,7 @@ function App() {
       <Preloader />
       <FluidCursor />
 
-      <main className="relative z-10">
+      <main className="relative">
         <Hero />
         <About />
         <Work />
