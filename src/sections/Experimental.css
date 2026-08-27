@@ -3,7 +3,8 @@
 .storyboard-experience__eyebrow { position:absolute; top:clamp(1.6rem,5vh,3rem); left:clamp(1.5rem,4.5vw,4rem); z-index:8; margin:0; padding:.35rem .65rem; background:rgba(8,8,8,.74); color:rgba(245,245,245,.66); font-size:clamp(.58rem,.7vw,.72rem); font-weight:600; letter-spacing:.32em; pointer-events:none; }
 .storyboard-track { min-width:0; overflow:hidden; display:flex; align-items:center; }
 .storyboard-track__motion { display:flex; width:max-content; will-change:transform; }
-.storyboard-track__set { display:flex; flex:none; align-items:center; gap:clamp(.8rem,1.3vw,1.35rem); padding-right:clamp(.8rem,1.3vw,1.35rem); }
+.storyboard-track__set { position:relative; display:flex; flex:none; align-items:center; gap:clamp(.8rem,1.3vw,1.35rem); padding:clamp(2rem,3.6vh,2.65rem) clamp(.8rem,1.3vw,1.35rem) clamp(2rem,3.6vh,2.65rem) 0; }
+.storyboard-track__set::after { content:''; position:absolute; inset:0; z-index:3; background-image:url('/assets/storyboards/filmstrip-frame.png'); background-position:center; background-repeat:no-repeat; background-size:100% 100%; pointer-events:none; }
 .storyboard-track--1 .storyboard-card,.storyboard-track--3 .storyboard-card { height:clamp(8.8rem,21vh,13.5rem); }
 .storyboard-track--2 .storyboard-card { height:clamp(8.1rem,19vh,12.3rem); }
 .storyboard-card { position:relative; flex:none; width:auto; max-width:min(22rem,26vw); margin:0; padding:0; overflow:hidden; border:1px solid rgba(255,255,255,.14); border-radius:1px; background:#111; box-shadow:0 1rem 2.8rem rgba(0,0,0,.5); cursor:zoom-in; transition:filter .4s ease,box-shadow .4s ease,transform .65s cubic-bezier(.2,.7,.2,1); }
@@ -32,6 +33,7 @@ body.storyboard-active .fluid-cursor { opacity:.42; transition:opacity .45s ease
   .storyboard-track--1 .storyboard-card,.storyboard-track--3 .storyboard-card { height:clamp(7.4rem,18vh,9.2rem); }
   .storyboard-track--2 .storyboard-card { height:clamp(6.6rem,15.5vh,8rem); }
   .storyboard-card,.storyboard-card img { max-width:13rem; }
+  .storyboard-track__set { padding-top:1.75rem; padding-bottom:1.75rem; }
   .storyboard-experience__title { width:88vw; padding:1.5rem .6rem; box-shadow:0 0 2rem 1rem #080808; }
   .storyboard-experience__title h2 { font-size:clamp(2rem,10vw,3.15rem); letter-spacing:.01em; }
   .storyboard-experience__title p { font-size:clamp(.45rem,2.2vw,.62rem); letter-spacing:.2em; }
