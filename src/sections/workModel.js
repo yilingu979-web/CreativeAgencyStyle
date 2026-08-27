@@ -9,4 +9,6 @@ export const projects = [
 ];
 
 export const shouldPlayPreview = ({ isVisible, hasOpenFilm }) => isVisible && !hasOpenFilm;
-export const isDragGesture = (horizontalDistance) => Math.abs(horizontalDistance) >= 12;
+export const isDragGesture = (horizontalDistance, verticalDistance = 0) => (
+  Math.abs(horizontalDistance) >= 12 && Math.abs(horizontalDistance) > Math.abs(verticalDistance)
+);

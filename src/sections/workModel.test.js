@@ -47,9 +47,11 @@ test('keeps card titles and production types paired with the approved work order
 test('treats slight pointer movement as a click and intentional horizontal movement as drag', async () => {
   const { isDragGesture } = await loadModel();
 
-  assert.equal(isDragGesture(0), false);
-  assert.equal(isDragGesture(7), false);
-  assert.equal(isDragGesture(-7), false);
-  assert.equal(isDragGesture(13), true);
-  assert.equal(isDragGesture(-13), true);
+  assert.equal(isDragGesture(0, 0), false);
+  assert.equal(isDragGesture(7, 2), false);
+  assert.equal(isDragGesture(-7, 2), false);
+  assert.equal(isDragGesture(13, 2), true);
+  assert.equal(isDragGesture(-13, 2), true);
+  assert.equal(isDragGesture(13, 40), false);
+  assert.equal(isDragGesture(40, 13), true);
 });

@@ -15,6 +15,11 @@ const SmoothScroll = ({ children }) => {
             touchMultiplier: 2,
         });
 
+        const stopForFilm = () => lenis.stop();
+        const resumeAfterFilm = () => lenis.start();
+        window.addEventListener('work-lightbox:open', stopForFilm);
+        window.addEventListener('work-lightbox:close', resumeAfterFilm);
+
         function raf(time) {
             lenis.raf(time);
             requestAnimationFrame(raf);
@@ -23,6 +28,8 @@ const SmoothScroll = ({ children }) => {
         requestAnimationFrame(raf);
 
         return () => {
+            window.removeEventListener('work-lightbox:open', stopForFilm);
+            window.removeEventListener('work-lightbox:close', resumeAfterFilm);
             lenis.destroy();
         };
     }, []);

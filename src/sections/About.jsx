@@ -9,6 +9,14 @@ const About = () => {
     const textRef = useRef(null);
     const imageRef = useRef(null);
 
+    const showSelectedWorks = () => {
+        const selectedWorks = document.getElementById('selected-works');
+        if (!selectedWorks) return;
+
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        selectedWorks.scrollIntoView({ behavior: reducedMotion.matches ? 'auto' : 'smooth', block: 'start' });
+    };
+
     useEffect(() => {
         const textChildren = textRef.current.children;
 
@@ -69,8 +77,10 @@ const About = () => {
                 </p>
                 <div className="pt-8">
                     <button
+                        type="button"
                         className="px-8 py-4 border border-primary/20 rounded-full hover:bg-primary hover:text-white transition-all duration-300 font-medium tracking-wide"
                         data-cursor="hover"
+                        onClick={showSelectedWorks}
                     >
                         MORE ABOUT US
                     </button>

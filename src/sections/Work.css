@@ -1,4 +1,4 @@
-.selected-works { width: 100%; max-width: 100vw; }
+.selected-works { width: 100%; max-width: 100vw; scroll-margin-top: 0; }
 .selected-works__track { display: flex; align-items: center; gap: clamp(1.5rem, 3vw, 4rem); height: 100%; overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scroll-padding-inline: clamp(2.5rem, 6vw, 7rem); scrollbar-width: none; cursor: grab; padding: 7rem clamp(2.5rem, 6vw, 7rem) 3rem; touch-action: pan-x pan-y; user-select: none; }
 .selected-works__track::-webkit-scrollbar { display: none; }
 .selected-works__track:active { cursor: grabbing; }
@@ -18,7 +18,7 @@
 .selected-works__end { flex: 0 0 clamp(1rem, 4vw, 5rem); }
 .selected-works__next { position: absolute; right: clamp(2rem, 5vw, 6rem); bottom: clamp(2rem, 5vh, 4rem); display: flex; align-items: center; gap: 1.5rem; border: 0; background: none; color: #c6a969; font-size: 2.1rem; cursor: pointer; z-index: 3; }
 .selected-works__next span { display: block; width: clamp(5rem, 10vw, 12rem); height: 1px; background: rgba(198,169,105,.72); }
-.work-lightbox { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: clamp(1rem, 4vw, 4rem); background: rgba(0,0,0,.94); cursor: default; }
+.work-lightbox { position: fixed; inset: 0; z-index: 20000; display: grid; place-items: center; padding: clamp(1rem, 4vw, 4rem); background: rgba(0,0,0,.94); cursor: default; }
 .work-lightbox__video { display: block; width: 100%; height: 100%; max-width: 92vw; max-height: 88vh; object-fit: contain; background: #000; }
 .work-lightbox__close { position: fixed; top: 1rem; right: clamp(1rem, 2vw, 2rem); z-index: 2; width: 3rem; height: 3rem; border: 1px solid rgba(255,255,255,.5); border-radius: 50%; background: rgba(0,0,0,.45); color: #fff; font-size: 2rem; line-height: 1; cursor: pointer; }
 @media (max-width: 767px) {
