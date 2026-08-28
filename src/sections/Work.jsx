@@ -3,6 +3,13 @@ import { createPortal, flushSync } from 'react-dom';
 import { isDragGesture, projects, shouldPlayPreview } from './workModel';
 import './Work.css';
 
+const productionServices = [
+    'AIGC 品牌广告',
+    'AI 拟真人短剧',
+    'AI 3D・动漫短剧',
+    'AIGC 音乐影像',
+];
+
 const Work = () => {
     const trackRef = useRef(null);
     const previewRefs = useRef(new Map());
@@ -124,9 +131,6 @@ const Work = () => {
 
     return (
         <section id="selected-works" className="selected-works relative h-screen bg-transparent text-secondary overflow-hidden" aria-labelledby="selected-works-title">
-            <div className="selected-works__eyebrow absolute top-10 left-10 md:left-20 z-10">
-                <h2 className="text-sm font-bold tracking-[0.2em] uppercase text-secondary/60">Selected Works</h2>
-            </div>
             <div ref={trackRef} className="selected-works__track" onPointerDown={startDrag} onPointerMove={moveDrag} onPointerUp={endDrag} onPointerCancel={endDrag}>
                 <header className="selected-works__intro">
                     <h3 id="selected-works-title" className="selected-works__title font-display font-bold"><span>精选</span><span className="selected-works__gold">作品</span></h3>
@@ -147,6 +151,17 @@ const Work = () => {
                 ))}
                 <div className="selected-works__end" aria-hidden="true" />
             </div>
+            <aside className="selected-works__services" aria-labelledby="production-services-title">
+                <h2 id="production-services-title" className="selected-works__services-title">AI 影像制作服务</h2>
+                <ol className="selected-works__services-list">
+                    {productionServices.map((service, index) => (
+                        <li key={service} className="selected-works__service">
+                            <span className="selected-works__service-number">{String(index + 1).padStart(2, '0')}</span>
+                            <span>{service}</span>
+                        </li>
+                    ))}
+                </ol>
+            </aside>
             <button type="button" className="selected-works__next" onClick={() => trackRef.current?.scrollBy({ left: trackRef.current.clientWidth * 0.72, behavior: 'smooth' })} aria-label="浏览下一个作品"><span />→</button>
             {activeProject && createPortal(
                 <div ref={lightboxRef} className="work-lightbox" role="dialog" aria-modal="true" aria-label={`${activeProject.title}完整版`} data-lenis-prevent onMouseDown={(event) => event.target === event.currentTarget && closeFilm()}>

@@ -39,3 +39,21 @@ test('full-film player is top-level, audible, controlled, and protected from bac
   assert.match(work, /work-lightbox:open/);
   assert.match(work, /work-lightbox:close/);
 });
+
+test('keeps the production services beneath the works in the approved order without the English eyebrow', async () => {
+  const work = await readSection('Work.jsx');
+
+  assert.doesNotMatch(work, />Selected Works</);
+  assert.match(work, /AI 影像制作服务/);
+
+  const serviceNames = [
+    'AIGC 品牌广告',
+    'AI 拟真人短剧',
+    'AI 3D・动漫短剧',
+    'AIGC 音乐影像',
+  ];
+  const positions = serviceNames.map((name) => work.indexOf(name));
+
+  positions.forEach((position) => assert.ok(position >= 0));
+  assert.deepEqual(positions, [...positions].sort((left, right) => left - right));
+});
