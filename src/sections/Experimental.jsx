@@ -81,6 +81,10 @@ const Experimental = () => {
     const openStoryboard = (item) => setSelectedIndex(storyboards.findIndex((candidate) => candidate.id === item.id));
     return <section ref={sectionRef} className="storyboard-experience" aria-labelledby="storyboard-title" data-layout-version={STORYBOARD_LAYOUT_VERSION}>
         <p className="storyboard-experience__eyebrow">AI CINEMATIC STORYBOARDS</p>
+        <div className="storyboard-experience__chapter" aria-label="分镜花絮">
+            <p>BEHIND THE FRAMES</p>
+            <h3>分镜花絮</h3>
+        </div>
         <div className="storyboard-experience__field">
             {tracks.map((track, trackIndex) => <div className={`storyboard-track storyboard-track--${trackIndex + 1}`} key={`track-${trackIndex + 1}`}>
                 <div ref={(node) => { trackRefs.current[trackIndex] = node; }} className="storyboard-track__motion">
