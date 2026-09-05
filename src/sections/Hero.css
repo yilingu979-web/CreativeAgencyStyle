@@ -1,0 +1,119 @@
+.hero {
+    min-height: 100vh;
+    min-height: 100svh;
+    padding: clamp(5rem, 9vh, 8rem) clamp(1.25rem, 5vw, 5rem);
+    isolation: isolate;
+}
+
+.hero__brand {
+    top: clamp(1.5rem, 4vw, 2.5rem);
+    left: clamp(1.5rem, 4vw, 2.5rem);
+    color: #f5f1e8;
+    font-size: clamp(1rem, 1.35vw, 1.3rem);
+}
+
+.hero__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    transform: scale(1.015);
+}
+
+.hero__shade {
+    background:
+        radial-gradient(ellipse 58% 43% at 50% 52%, rgba(5, 5, 5, .58), rgba(5, 5, 5, .2) 68%, transparent 100%),
+        linear-gradient(180deg, rgba(7, 7, 7, .22), rgba(7, 7, 7, .08) 35%, rgba(7, 7, 7, .2));
+}
+
+.hero__content {
+    max-width: 90rem;
+}
+
+.hero__title {
+    gap: clamp(.25rem, 1vw, 1rem);
+    color: #f5f1e8;
+    font-size: clamp(3rem, 8.2vw, 9.5rem);
+    letter-spacing: -.055em;
+    text-shadow: 0 4px 30px rgba(0, 0, 0, .42);
+}
+
+.hero__dot {
+    color: #d9be7a;
+    font-size: .58em;
+    transform: translateY(-.12em);
+}
+
+.hero__title-accent {
+    color: #d9be7a;
+}
+
+.hero__intro {
+    margin-top: clamp(2rem, 4vw, 3.75rem);
+}
+
+.hero__copy {
+    color: rgba(245, 241, 232, .94);
+    font-size: clamp(.9rem, 1.4vw, 1.55rem);
+    line-height: 1.85;
+    letter-spacing: .035em;
+    text-shadow: 0 2px 18px rgba(0, 0, 0, .72);
+}
+
+.hero__scroll {
+    gap: .8rem;
+    color: rgba(245, 241, 232, .76);
+}
+
+.hero__scroll-line {
+    display: block;
+    width: 1px;
+    height: clamp(2rem, 5vh, 4.5rem);
+    background: #d9be7a;
+}
+
+@media (max-width: 600px) {
+    .hero {
+        min-height: 100svh;
+        justify-content: center;
+        padding: 5.5rem 1.2rem 7.5rem;
+    }
+
+    .hero__image {
+        object-position: 47% center;
+    }
+
+    .hero__shade {
+        background:
+            radial-gradient(ellipse 92% 44% at 50% 50%, rgba(5, 5, 5, .68), rgba(5, 5, 5, .25) 72%, transparent 100%),
+            linear-gradient(180deg, rgba(7, 7, 7, .2), rgba(7, 7, 7, .12), rgba(7, 7, 7, .28));
+    }
+
+    .hero__title {
+        gap: .15rem;
+        font-size: clamp(2.6rem, 13.5vw, 4.5rem);
+        letter-spacing: -.075em;
+    }
+
+    .hero__copy {
+        max-width: 22rem;
+        font-size: clamp(.82rem, 3.6vw, 1rem);
+        line-height: 1.75;
+        letter-spacing: .01em;
+    }
+
+    .hero__copy span {
+        display: inline;
+    }
+
+    .hero__scroll {
+        bottom: 1.5rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero__image {
+        transform: none;
+    }
+}
+
