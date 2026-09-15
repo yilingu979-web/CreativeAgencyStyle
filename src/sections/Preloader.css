@@ -1,0 +1,64 @@
+.intro-preview {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #f3f4f2;
+  color: #151515;
+  will-change: opacity;
+}
+
+.intro-preview__frame {
+  width: min(94vw, 96rem);
+  text-align: center;
+}
+
+.intro-preview__words {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  white-space: nowrap;
+}
+
+.intro-preview__char {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 1em;
+  margin-inline: -.035em;
+  font-family: 'Source Han Serif SC', 'Noto Serif CJK SC', 'Songti SC', STSong, serif;
+  font-size: clamp(4.7rem, 11.8vw, 11.8rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0;
+  overflow: visible;
+  will-change: transform, opacity;
+}
+
+.intro-preview__texture,
+.intro-preview__ink {
+  grid-area: 1 / 1;
+  display: block;
+}
+
+.intro-preview__texture {
+  filter: saturate(.84) contrast(1.06);
+}
+
+.intro-preview__ink {
+  color: #171717;
+  will-change: opacity;
+}
+
+@media (max-width: 680px) {
+  .intro-preview__frame { width: 97vw; }
+  .intro-preview__words { gap: 0; }
+  .intro-preview__char {
+    margin-inline: -.045em;
+    font-size: clamp(3rem, 16vw, 5.6rem);
+    letter-spacing: 0;
+  }
+}

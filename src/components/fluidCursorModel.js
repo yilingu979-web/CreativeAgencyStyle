@@ -1,26 +1,24 @@
-export const createFluidConfig = ({ isMobile }) => ({
-    IMMEDIATE: false,
-    TRIGGER: 'hover',
-    SIM_RESOLUTION: isMobile ? 64 : 128,
-    DYE_RESOLUTION: isMobile ? 512 : 1024,
-    CAPTURE_RESOLUTION: 512,
-    DENSITY_DISSIPATION: 3.5,
-    VELOCITY_DISSIPATION: 1.5,
-    PRESSURE: 0.1,
-    PRESSURE_ITERATIONS: isMobile ? 12 : 20,
-    CURL: 3,
-    SPLAT_RADIUS: isMobile ? 0.45 : 0.6,
-    SPLAT_FORCE: 6500,
-    SHADING: !isMobile,
-    COLORFUL: true,
-    COLOR_UPDATE_SPEED: 10,
-    PAUSED: false,
-    BACK_COLOR: { r: 0, g: 0, b: 0 },
-    TRANSPARENT: true,
-    BLOOM: false,
-    SUNRAYS: false,
-});
+export const shouldEnableParticleCursor = ({ reducedMotion, isCoarsePointer }) => !reducedMotion && !isCoarsePointer;
 
-export const shouldEnableFluidCursor = ({ reducedMotion, hasWebGL }) => !reducedMotion && hasWebGL;
+export const particleCountForDistance = (distance) => Math.min(80, Math.max(10, Math.round(distance * 0.9)));
 
-export const pointerEventToMouseInit = ({ clientX, clientY }) => ({ clientX, clientY });
+export const createParticle = ({ x, y, dx, dy, random = Math.random }) => {
+  const speed = Math.hypot(dx, dy) || 1;
+  const tangentX = dx / speed;
+  const tangentY = dy / speed;
+  const normalX = -tangentY;
+  const normalY = tangentX;
+  const spread = (random() - 0.5) * 44;
+  const drift = 0.8 + random() * 2.8;
+
+  return {
+    x: x + normalX * spread,
+    y: y + normalY * spread,
+    vx: tangentX * (1.2 + random() * 2.5) + normalX * drift * (random() - 0.5),
+    vy: tangentY * (1.2 + random() * 2.5) + normalY * drift * (random() - 0.5),
+    size: 0.6 + random() * 1.8,
+    life: 0,
+    maxLife: 24 + random() * 34,
+    opacity: 0.45 + random() * 0.55,
+  };
+};

@@ -1,40 +1,25 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { createFluidConfig, pointerEventToMouseInit, shouldEnableFluidCursor } from './fluidCursorModel.js';
+import { createParticle, particleCountForDistance, shouldEnableParticleCursor } from './fluidCursorModel.js';
 
-test('desktop profile matches the approved smoky colorful interaction', () => {
-  const config = createFluidConfig({ isMobile: false });
-
-  assert.equal(config.TRIGGER, 'hover');
-  assert.equal(config.TRANSPARENT, true);
-  assert.equal(config.COLORFUL, true);
-  assert.equal(config.SIM_RESOLUTION, 128);
-  assert.equal(config.DYE_RESOLUTION, 1024);
-  assert.equal(config.DENSITY_DISSIPATION, 3.5);
-  assert.equal(config.SPLAT_FORCE, 6500);
+test('particle cursor respects reduced motion and touch input', () => {
+  assert.equal(shouldEnableParticleCursor({ reducedMotion: true, isCoarsePointer: false }), false);
+  assert.equal(shouldEnableParticleCursor({ reducedMotion: false, isCoarsePointer: true }), false);
+  assert.equal(shouldEnableParticleCursor({ reducedMotion: false, isCoarsePointer: false }), true);
 });
 
-test('mobile profile lowers GPU cost without changing the interaction style', () => {
-  const config = createFluidConfig({ isMobile: true });
-
-  assert.equal(config.TRIGGER, 'hover');
-  assert.equal(config.TRANSPARENT, true);
-  assert.equal(config.COLORFUL, true);
-  assert.equal(config.SIM_RESOLUTION, 64);
-  assert.equal(config.DYE_RESOLUTION, 512);
-  assert.equal(config.SHADING, false);
+test('emission grows with movement but remains bounded', () => {
+  assert.equal(particleCountForDistance(1), 10);
+  assert.equal(particleCountForDistance(40), 36);
+  assert.equal(particleCountForDistance(1000), 80);
 });
 
-test('fluid cursor is disabled for reduced motion or missing WebGL', () => {
-  assert.equal(shouldEnableFluidCursor({ reducedMotion: true, hasWebGL: true }), false);
-  assert.equal(shouldEnableFluidCursor({ reducedMotion: false, hasWebGL: false }), false);
-  assert.equal(shouldEnableFluidCursor({ reducedMotion: false, hasWebGL: true }), true);
-});
-
-test('pointer movement is forwarded without taking ownership of scrolling or clicks', () => {
-  assert.deepEqual(pointerEventToMouseInit({ clientX: 120, clientY: 340 }), {
-    clientX: 120,
-    clientY: 340,
-  });
+test('particles use a compact monochrome grain profile', () => {
+  const particle = createParticle({ x: 100, y: 200, dx: 20, dy: 0, random: () => 0.5 });
+  assert.equal(particle.x, 100);
+  assert.equal(particle.y, 200);
+  assert.ok(particle.size <= 2.4);
+  assert.ok(particle.maxLife >= 24 && particle.maxLife <= 58);
+  assert.ok(particle.opacity >= 0.45 && particle.opacity <= 1);
 });

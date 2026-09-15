@@ -79,7 +79,7 @@ const Experimental = () => {
 
     const selected = selectedIndex === null ? null : storyboards[selectedIndex];
     const openStoryboard = (item) => setSelectedIndex(storyboards.findIndex((candidate) => candidate.id === item.id));
-    return <section ref={sectionRef} className="storyboard-experience" aria-labelledby="storyboard-title" data-layout-version={STORYBOARD_LAYOUT_VERSION}>
+    return <section id="storyboard" ref={sectionRef} className="storyboard-experience" aria-labelledby="storyboard-title" data-layout-version={STORYBOARD_LAYOUT_VERSION}>
         <p className="storyboard-experience__eyebrow">AI CINEMATIC STORYBOARDS</p>
         <div className="storyboard-experience__chapter" aria-label="分镜花絮">
             <p>BEHIND THE FRAMES</p>
@@ -94,7 +94,7 @@ const Experimental = () => {
                 </div>
             </div>)}
         </div>
-        <div className="storyboard-experience__title"><h2 id="storyboard-title">让一切<span>可能</span>发生</h2><p>MAKE EVERY POSSIBILITY REAL</p></div>
+        <div className="storyboard-experience__title"><h2 id="storyboard-title">创意不止于<span>想象</span></h2><p>CREATIVITY BEYOND IMAGINATION</p></div>
         {selected && <div className="storyboard-lightbox" role="dialog" aria-modal="true" aria-label={selected.alt} onPointerDown={(event) => { if (event.target === event.currentTarget) setSelectedIndex(null); }}>
             <button type="button" className="storyboard-lightbox__close" onClick={() => setSelectedIndex(null)} aria-label="关闭大图"><FiX /></button>
             <button type="button" className="storyboard-lightbox__nav storyboard-lightbox__nav--previous" onClick={() => setSelectedIndex((selectedIndex - 1 + storyboards.length) % storyboards.length)} aria-label="查看上一张"><FiChevronLeft /></button>

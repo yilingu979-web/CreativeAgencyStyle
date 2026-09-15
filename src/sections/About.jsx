@@ -58,8 +58,8 @@ const About = () => {
             <div className="w-full aspect-[9/16] md:w-auto md:h-[80vh] relative overflow-hidden mb-10 md:mb-0 md:shrink-0">
                 <div ref={imageRef} className="absolute inset-0 w-full h-full">
                     <img
-                        src="/assets/kouji-church.jpg"
-                        alt="教堂内部的立柱与彩色玻璃窗"
+                        src="/assets/kouji-imperial-bronze-portrait.png"
+                        alt="帷幔下的宫殿远景与青铜双龙浮雕"
                         className="w-full h-full object-cover"
                     />
                 </div>
@@ -68,12 +68,17 @@ const About = () => {
             {/* Text Side */}
             <div ref={textRef} className="w-full md:w-1/2 md:pl-20 flex flex-col gap-6">
                 <h2 className="text-sm font-bold tracking-[0.2em] uppercase text-neutral/60">Who We Are</h2>
-                <h3 className="text-4xl md:text-6xl font-display font-bold leading-tight relative">
-                    <span className="block whitespace-nowrap">我们重新</span>
-                    <span className="block whitespace-nowrap">想象影像。</span>
+                <h3 className="text-[30px] md:text-[36px] font-bold leading-[1.25] tracking-[0.02em] relative">
+                    <span className="whitespace-nowrap">扣寂，</span><wbr /><span className="whitespace-nowrap">于无声处寻音</span>
                 </h3>
-                <p className="text-lg md:text-xl font-sans text-neutral/80 leading-relaxed max-w-md text-pretty [text-align:justify] [text-justify:inter-character]">
-                    我们聚集了一群对影像充满热情的创作者和技术探索者，用 AI 拓展影像创作的可能，让想象成为一种真实可见的<span className="whitespace-nowrap">体验</span>。
+                <p className="text-[17px] md:text-[18px] font-sans text-neutral/80 leading-[1.72] [text-wrap:balance]">
+                    课虚无以责有，叩寂寞而<span className="whitespace-nowrap">求音。</span>我们在无声处扣问灵感，于<span className="whitespace-nowrap">喧嚣</span>中沉淀视觉；让东方美学与先锋艺术，在 AI 技术和<span className="whitespace-nowrap">影像</span>叙事的交汇中产生回响。
+                </p>
+                <p className="text-[15px] md:text-[16px] font-sans text-neutral/80 leading-[1.72] [text-wrap:balance]">
+                    我们以电影思维重构数字叙事。核心团队来自北京电影学院、中央美术学院等院校，将对光影、空间与人性的理解注入创作，摆脱流水线式 AI 视觉，呈现有温度的影像美学。
+                </p>
+                <p className="text-[15px] md:text-[16px] font-sans text-neutral/80 leading-[1.72] [text-wrap:balance]">
+                    从为国际头部汽车与消费品牌打造 AIGC 广告，到创作 AI 真人短剧、AI 3D／动漫剧集及实验性音乐影像，我们持续拓宽 AI 的表达边界，让每一帧成为品牌与观众之间的回响。
                 </p>
                 <div className="pt-8">
                     <button

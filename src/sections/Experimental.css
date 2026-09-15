@@ -20,7 +20,7 @@
 .storyboard-experience__title::after { content:''; display:block; width:clamp(5rem,9vw,8.5rem); height:1px; margin:clamp(1rem,2vh,1.5rem) auto 0; background:rgba(198,169,105,.62); }
 .storyboard-experience__title h2 { margin:0; color:#f5f5f5; font-family:var(--font-display); font-size:clamp(2.5rem,5.3vw,5.5rem); font-weight:500; line-height:1.08; letter-spacing:.04em; white-space:nowrap; }
 .storyboard-experience__title h2 span { color:#c6a969; }
-.storyboard-experience__title p { margin:clamp(.8rem,1.8vh,1.25rem) 0 0; color:rgba(245,245,245,.72); font-size:clamp(.54rem,.72vw,.72rem); font-weight:600; letter-spacing:clamp(.22em,.48vw,.55em); white-space:nowrap; }
+.storyboard-experience__title p { margin:clamp(.8rem,1.8vh,1.25rem) 0 0; color:rgba(245,245,245,.72); font-family:'Cormorant Garamond',serif; font-size:clamp(.54rem,.72vw,.72rem); font-weight:600; letter-spacing:clamp(.22em,.48vw,.55em); white-space:nowrap; }
 .storyboard-lightbox { position:fixed; inset:0; z-index:1200; display:grid; place-items:center; padding:clamp(3rem,6vw,6rem); background:rgba(3,3,3,.96); backdrop-filter:blur(12px); }
 .storyboard-lightbox figure { display:grid; grid-template-rows:minmax(0,1fr) auto; gap:1rem; width:min(86vw,90rem); height:min(84vh,60rem); margin:0; }
 .storyboard-lightbox figure img { width:100%; height:100%; min-height:0; object-fit:contain; }

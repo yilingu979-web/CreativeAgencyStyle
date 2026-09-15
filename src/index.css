@@ -6,15 +6,50 @@
   --color-accent: #C6A969;
   --color-neutral: #1A1A1A;
 
-  --font-sans: 'Inter', sans-serif;
-  --font-display: 'Poppins', sans-serif;
+  --font-sans: 'Noto Serif SC', 'Source Han Serif SC', serif;
+  --font-display: 'Cormorant Garamond', 'Noto Serif SC', 'Source Han Serif SC', serif;
 }
 
 @layer base {
   body {
     @apply bg-primary text-secondary selection:bg-accent selection:text-primary;
     overscroll-behavior: none;
+    font-family: var(--font-sans);
   }
+}
+
+html[data-font-preview="wenkai"] {
+  --font-sans: 'LXGW WenKai', 'Noto Serif SC', serif;
+  --font-display: 'Cormorant Garamond', 'LXGW WenKai', 'Noto Serif SC', serif;
+}
+
+.footer-intro__copy {
+  max-width: 34em;
+  margin: 0 0 clamp(2.5rem, 5vw, 4.5rem);
+  color: rgba(245,245,245,.8);
+  font-size: clamp(.95rem, 1.12vw, 1.13rem);
+  font-weight: 400;
+  line-height: 1.9;
+  letter-spacing: .025em;
+  text-wrap: pretty;
+}
+.footer-intro__title { font-family: var(--font-sans); }
+.footer-intro__english {
+  margin-top: 1rem;
+  font-size: clamp(1.1rem, 1.8vw, 1.5rem);
+  font-weight: 600;
+  letter-spacing: .09em;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+.footer-intro__details { margin-top: clamp(2rem, 4vw, 3rem); overflow-wrap: anywhere; }
+@media (min-width: 768px) and (max-width: 1100px) {
+  .footer-intro__copy { font-size: .9rem; letter-spacing: 0; }
+}
+@media (max-width: 767px) {
+  .footer-intro__copy { max-width: 100%; margin-bottom: 2.5rem; font-size: .96rem; line-height: 1.85; }
+  .footer-intro__english { font-size: clamp(.98rem, 4.1vw, 1.25rem); letter-spacing: .025em; }
+  .footer-intro__details { margin-top: 2rem; }
 }
 
 .fluid-cursor {
