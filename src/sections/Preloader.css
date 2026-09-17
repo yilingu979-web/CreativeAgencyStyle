@@ -16,12 +16,11 @@
 }
 
 .intro-preview__words {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0;
   white-space: nowrap;
-  transform: translateX(-0.5%);
 }
 
 .intro-preview__char {
