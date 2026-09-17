@@ -40,20 +40,23 @@ test('full-film player is top-level, audible, controlled, and protected from bac
   assert.match(work, /work-lightbox:close/);
 });
 
-test('keeps the production services beneath the works in the approved order without the English eyebrow', async () => {
+test('keeps the production services beneath the works as a single-select case-study accordion', async () => {
   const work = await readSection('Work.jsx');
 
   assert.doesNotMatch(work, />Selected Works</);
   assert.match(work, /AI 影像制作服务/);
+  assert.match(work, /productionServices/);
+  assert.match(work, /setActiveService/);
+  assert.match(work, /aria-expanded=\{activeService === service\.id\}/);
+  assert.match(work, /service-detail/);
+  assert.match(work, /selected-works--service-open/);
+});
 
-  const serviceNames = [
-    'AIGC 品牌广告',
-    'AI 拟真人短剧',
-    'AI 3D・动漫短剧',
-    'AIGC 音乐影像',
-  ];
-  const positions = serviceNames.map((name) => work.indexOf(name));
+test('opens supplied service frames in an accessible image lightbox', async () => {
+  const work = await readSection('Work.jsx');
 
-  positions.forEach((position) => assert.ok(position >= 0));
-  assert.deepEqual(positions, [...positions].sort((left, right) => left - right));
+  assert.match(work, /setActiveImage/);
+  assert.match(work, /查看.*大图/);
+  assert.match(work, /className="work-lightbox__image"/);
+  assert.match(work, /alt=\{activeImage\.alt\}/);
 });

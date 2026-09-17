@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import {
     buildIntroSequence,
-    CHINESE_INTRO_BUILD,
     calculateGlyphMaskCanvas,
     INTRO_TEXTURE_INK_FLOOR,
+    shouldUseChineseIntro,
 } from './introSequence.js';
 import './Preloader.css';
 
@@ -69,13 +69,13 @@ const Preloader = () => {
     const textRef = useRef(null);
     const characterRefs = useRef([]);
     const [complete, setComplete] = useState(false);
-    const isChinesePreview = typeof window !== 'undefined'
-        && new URLSearchParams(window.location.search).get('build') === CHINESE_INTRO_BUILD;
     const reduceMotion = typeof window !== 'undefined'
         && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isChineseIntro = typeof window !== 'undefined'
+        && shouldUseChineseIntro(window.location.search, reduceMotion);
 
     useEffect(() => {
-        if (isChinesePreview) {
+        if (isChineseIntro) {
             const characters = characterRefs.current.filter(Boolean);
             const inkLayers = characters.map((element) => element.querySelector('.intro-preview__ink'));
             const sequence = buildIntroSequence();
@@ -156,11 +156,11 @@ const Preloader = () => {
         });
 
         return () => tl.kill();
-    }, [isChinesePreview, reduceMotion]);
+    }, [isChineseIntro, reduceMotion]);
 
-    if (complete || (isChinesePreview && reduceMotion)) return null;
+    if (complete || reduceMotion) return null;
 
-    if (isChinesePreview) {
+    if (isChineseIntro) {
         const words = buildIntroSequence();
 
         return (

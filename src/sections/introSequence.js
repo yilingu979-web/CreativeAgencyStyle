@@ -1,5 +1,3 @@
-export const CHINESE_INTRO_BUILD = 'cn-intro-preview';
-
 export const INTRO_GLYPH_METRICS = {
   lineHeightEm: 1.08,
   paddingBlockEm: 0.1,
@@ -20,7 +18,7 @@ const INTRO_CHARACTERS = [
 
 export function shouldUseChineseIntro(search = '', reducedMotion = false) {
   if (reducedMotion) return false;
-  return new URLSearchParams(search).get('build') === CHINESE_INTRO_BUILD;
+  return true;
 }
 
 export function buildIntroSequence() {

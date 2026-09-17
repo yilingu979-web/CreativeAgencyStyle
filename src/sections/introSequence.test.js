@@ -5,9 +5,10 @@ import * as intro from './introSequence.js';
 
 const { buildIntroSequence, shouldUseChineseIntro } = intro;
 
-test('Chinese intro is isolated behind the preview build flag', () => {
+test('Chinese intro is the default opening without a preview URL parameter', () => {
+  assert.equal(shouldUseChineseIntro(''), true);
   assert.equal(shouldUseChineseIntro('?build=cn-intro-preview'), true);
-  assert.equal(shouldUseChineseIntro('?build=cloud-mural-final'), false);
+  assert.equal(shouldUseChineseIntro('?build=cloud-mural-final'), true);
 });
 
 test('intro reveals six individual characters before tightly staggered downward exits', () => {
@@ -29,7 +30,7 @@ test('the complete intro stays compact enough to transition directly into the ho
 });
 
 test('reduced motion bypasses the decorative intro', () => {
-  assert.equal(shouldUseChineseIntro('?build=cn-intro-preview', true), false);
+  assert.equal(shouldUseChineseIntro('', true), false);
 });
 
 test('photo glyphs reserve a full four-sided canvas outside the complete glyph box', () => {

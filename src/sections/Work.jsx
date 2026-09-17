@@ -1,14 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal, flushSync } from 'react-dom';
 import { isDragGesture, projects, shouldPlayPreview } from './workModel';
+import { productionServices } from './productionServices';
 import './Work.css';
-
-const productionServices = [
-    'AIGC 品牌广告',
-    'AI 拟真人短剧',
-    'AI 3D・动漫短剧',
-    'AIGC 音乐影像',
-];
 
 const Work = () => {
     const trackRef = useRef(null);
@@ -19,6 +13,8 @@ const Work = () => {
     const scrollPositionRef = useRef(0);
     const drag = useRef({ active: false, suppressClick: false, startX: 0, startY: 0, startScroll: 0 });
     const [activeProject, setActiveProject] = useState(null);
+    const [activeService, setActiveService] = useState(null);
+    const [activeImage, setActiveImage] = useState(null);
 
     const syncPreviews = useCallback((openFilm = activeProject) => {
         previewRefs.current.forEach((video, id) => {
@@ -27,9 +23,10 @@ const Work = () => {
         });
     }, [activeProject]);
 
-    const closeFilm = useCallback(() => {
+    const closeLightbox = useCallback(() => {
         fullVideoRef.current?.pause();
         setActiveProject(null);
+        setActiveImage(null);
         requestAnimationFrame(() => syncPreviews(null));
     }, [syncPreviews]);
 
@@ -47,13 +44,13 @@ const Work = () => {
     }, [syncPreviews]);
 
     useEffect(() => {
-        if (!activeProject) return undefined;
+        if (!activeProject && !activeImage) return undefined;
         const body = document.body;
         const root = document.documentElement;
         const appRoot = document.getElementById('root');
         const previousFocus = document.activeElement;
         const onKeyDown = (event) => {
-            if (event.key === 'Escape') closeFilm();
+            if (event.key === 'Escape') closeLightbox();
             if (event.key !== 'Tab' || !lightboxRef.current) return;
             const focusable = [...lightboxRef.current.querySelectorAll('button, video')];
             const first = focusable[0];
@@ -93,7 +90,7 @@ const Work = () => {
             window.removeEventListener('keydown', onKeyDown);
             previousFocus?.focus();
         };
-    }, [activeProject, closeFilm]);
+    }, [activeProject, activeImage, closeLightbox]);
 
     const openFilm = (project) => {
         if (drag.current.suppressClick) return;
@@ -130,7 +127,7 @@ const Work = () => {
     };
 
     return (
-        <section id="selected-works" className="selected-works relative h-screen bg-transparent text-secondary overflow-hidden" aria-labelledby="selected-works-title">
+        <section id="selected-works" className={`selected-works relative h-screen bg-transparent text-secondary overflow-hidden${activeService ? ' selected-works--service-open' : ''}`} aria-labelledby="selected-works-title">
             <div ref={trackRef} className="selected-works__track" onPointerDown={startDrag} onPointerMove={moveDrag} onPointerUp={endDrag} onPointerCancel={endDrag}>
                 <header className="selected-works__intro">
                     <h3 id="selected-works-title" className="selected-works__title font-display font-bold"><span>精选</span><span className="selected-works__gold">作品</span></h3>
@@ -155,18 +152,40 @@ const Work = () => {
                 <h2 id="production-services-title" className="selected-works__services-title">AI 影像制作服务</h2>
                 <ol className="selected-works__services-list">
                     {productionServices.map((service, index) => (
-                        <li key={service} className="selected-works__service">
-                            <span className="selected-works__service-number">{String(index + 1).padStart(2, '0')}</span>
-                            <span>{service}</span>
+                        <li key={service.id} className="selected-works__service-item">
+                            <button type="button" className="selected-works__service" onClick={() => setActiveService(activeService === service.id ? null : service.id)} aria-expanded={activeService === service.id} aria-controls={`service-detail-${service.id}`}>
+                                <span className="selected-works__service-number">{String(index + 1).padStart(2, '0')}</span>
+                                <span>{service.title}</span>
+                            </button>
+                            {activeService === service.id && (
+                                <div id={`service-detail-${service.id}`} className="selected-works__service-detail">
+                                    <p className="selected-works__service-copy">{service.description}</p>
+                                    <div className="selected-works__service-cases">
+                                        {service.cases.map((caseStudy) => (
+                                            <article key={caseStudy.title} className="selected-works__service-case">
+                                                <div className={`selected-works__service-images selected-works__service-images--${caseStudy.images.length}`}>
+                                                    {caseStudy.images.map((image) => (
+                                                        <button type="button" key={image.src} className="selected-works__service-image" onClick={() => setActiveImage(image)} aria-label={`查看${image.alt}大图`}>
+                                                            <img src={image.src} alt={image.alt} />
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                                <p className="selected-works__service-case-title">{caseStudy.title}</p>
+                                                {caseStudy.achievement && <p className="selected-works__service-achievement">{caseStudy.achievement}</p>}
+                                            </article>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                         </li>
                     ))}
                 </ol>
             </aside>
             <button type="button" className="selected-works__next" onClick={() => trackRef.current?.scrollBy({ left: trackRef.current.clientWidth * 0.72, behavior: 'smooth' })} aria-label="浏览下一个作品"><span />→</button>
-            {activeProject && createPortal(
-                <div ref={lightboxRef} className="work-lightbox" role="dialog" aria-modal="true" aria-label={`${activeProject.title}完整版`} data-lenis-prevent onMouseDown={(event) => event.target === event.currentTarget && closeFilm()}>
-                    <button type="button" className="work-lightbox__close" onClick={closeFilm} aria-label="关闭播放器">×</button>
-                    <video ref={fullVideoRef} className="work-lightbox__video" src={activeProject.full} controls autoPlay playsInline preload="metadata" />
+            {(activeProject || activeImage) && createPortal(
+                <div ref={lightboxRef} className="work-lightbox" role="dialog" aria-modal="true" aria-label={activeImage ? activeImage.alt : `${activeProject.title}完整版`} data-lenis-prevent onMouseDown={(event) => event.target === event.currentTarget && closeLightbox()}>
+                    <button type="button" className="work-lightbox__close" onClick={closeLightbox} aria-label="关闭大图">×</button>
+                    {activeImage ? <img className="work-lightbox__image" src={activeImage.src} alt={activeImage.alt} /> : <video ref={fullVideoRef} className="work-lightbox__video" src={activeProject.full} controls autoPlay playsInline preload="metadata" />}
                 </div>,
                 document.body,
             )}
