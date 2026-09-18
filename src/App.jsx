@@ -14,7 +14,7 @@ function App() {
       <Preloader />
       <FluidCursor />
 
-      <main className="relative">
+      <main className="relative" onContextMenu={(event) => event.preventDefault()}>
         <Hero />
         <About />
         <Work />

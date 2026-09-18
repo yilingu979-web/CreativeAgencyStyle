@@ -16,6 +16,12 @@
     overscroll-behavior: none;
     font-family: var(--font-sans);
   }
+
+  img,
+  video {
+    -webkit-user-drag: none;
+    user-select: none;
+  }
 }
 
 html[data-font-preview="wenkai"] {
