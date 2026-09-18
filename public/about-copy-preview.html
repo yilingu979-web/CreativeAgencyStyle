@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>第二页文案预览｜叩寂</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: #F5F5F5; color: #0B0B0B; }
+    body { font-family: Inter, "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif; }
+    .page { min-height: 100vh; display: flex; flex-direction: row; align-items: flex-start; justify-content: center; padding: 80px; overflow-x: hidden; }
+    .visual { height: 80vh; aspect-ratio: 9 / 16; position: relative; overflow: hidden; flex-shrink: 0; margin-top: calc(10vh - 80px); }
+    .visual img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .copy { width: 50%; padding-left: 80px; display: flex; flex-direction: column; gap: 24px; margin-top: max(0px, calc((100vh - 430px) / 2 - 80px)); }
+    .eyebrow { margin: 0; font-size: 14px; line-height: 1.4; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: #777; }
+    .copy-title { margin: 0; font-size: 36px; line-height: 1.25; font-weight: 700; letter-spacing: .02em; }
+    .copy-title span { white-space: nowrap; }
+    .intro { margin: 0; font-size: 18px; line-height: 1.72; color: #454545; text-wrap: balance; }
+    .theme { margin: 0; font-size: 18px; line-height: 1.5; font-weight: 700; letter-spacing: .01em; text-wrap: pretty; }
+    .body-copy { margin: 0; font-size: 16px; line-height: 1.72; color: #454545; text-wrap: balance; }
+    .services { display: flex; flex-direction: column; gap: 12px; }
+    .body-copy strong { font-weight: 700; color: #0B0B0B; }
+    .nowrap { white-space: nowrap; }
+    .button-wrap { padding-top: 32px; }
+    .button { display: inline-block; padding: 16px 32px; border: 1px solid rgba(11, 11, 11, .2); border-radius: 999px; font: inherit; font-weight: 500; letter-spacing: .025em; color: #0B0B0B; background: transparent; }
+    @media (max-width: 767px) {
+      .page { flex-direction: column; padding: 80px 24px; }
+      .visual { width: 100%; height: auto; aspect-ratio: 9 / 16; margin-top: 0; margin-bottom: 40px; }
+      .copy { width: 100%; padding-left: 0; margin-top: 0; }
+      .copy-title { font-size: 30px; }
+      .intro { font-size: 17px; }
+      .theme { font-size: 17px; }
+      .body-copy { font-size: 15px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="visual"><img src="/assets/kouji-imperial-bronze-portrait.png" alt="帷幔下的宫殿远景与青铜双龙浮雕" /></div>
+    <div class="copy">
+      <p class="eyebrow">Who We Are</p>
+      <h2 class="copy-title"><span>叩寂，</span><wbr><span>于无声处寻音</span></h2>
+      <p class="intro">课虚无以责有，叩寂寞而<span class="nowrap">求音。</span>我们在无声处扣问灵感，于<span class="nowrap">喧嚣</span>中沉淀视觉；让东方美学与先锋艺术，在 AI 技术和<span class="nowrap">影像</span>叙事的交汇中产生回响。</p>
+      <p class="body-copy">我们以电影思维重构数字叙事。核心团队来自北京电影学院、中央美术学院等院校，将对光影、空间与人性的理解注入创作，摆脱流水线式 AI 视觉，呈现有温度的影像美学。</p>
+      <p class="body-copy">从为国际头部汽车与消费品牌打造 AIGC 广告，到创作 AI 真人短剧、AI 3D 与动漫漫剧及实验性音乐影像，我们持续拓宽 AI 的表达边界，让每一帧成为品牌与观众之间的回响。</p>
+      <div class="button-wrap"><button class="button" type="button">MORE ABOUT US</button></div>
+    </div>
+  </main>
+</body>
+</html>
