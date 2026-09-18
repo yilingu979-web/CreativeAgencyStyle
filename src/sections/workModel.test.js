@@ -9,7 +9,7 @@ async function loadModel() {
   }
 }
 
-test('maps the five approved works to their matching preview and full videos in order', async () => {
+test('maps the four approved works to their matching preview and full videos in order', async () => {
   const { projects } = await loadModel();
 
   assert.deepEqual(
@@ -18,7 +18,6 @@ test('maps the five approved works to their matching preview and full videos in 
       { title: '《五菱·万物同行》', preview: '/assets/works/previews/wuling-preview.mp4', full: 'https://github.com/yilingu979-web/CreativeAgencyStyle/releases/download/selected-works-media-v1/wuling-full.mp4' },
       { title: '《SWIM》MV', preview: '/assets/works/previews/swim-preview.mp4', full: 'https://github.com/yilingu979-web/CreativeAgencyStyle/releases/download/selected-works-media-v1/swim-full.mp4' },
       { title: '《帝国公主》', preview: '/assets/works/previews/princess-preview.mp4', full: 'https://github.com/yilingu979-web/CreativeAgencyStyle/releases/download/selected-works-media-v1/princess-full.mov' },
-      { title: '《奥迪·破夜而行》', preview: '/assets/works/previews/audi-preview.mp4', full: 'https://github.com/yilingu979-web/CreativeAgencyStyle/releases/download/selected-works-media-v1/audi-full.mp4' },
       { title: '《夏日回响》MV', preview: '/assets/works/previews/summer-preview.mp4', full: 'https://github.com/yilingu979-web/CreativeAgencyStyle/releases/download/selected-works-media-v1/summer-full.mp4' },
     ],
   );
@@ -39,7 +38,6 @@ test('keeps card titles and production types paired with the approved work order
     ['五菱·万物同行', '广告'],
     ['SWIM', 'MV'],
     ['帝国公主', '短剧'],
-    ['奥迪·破夜而行', '广告'],
     ['夏日回响', 'MV'],
   ]);
 });

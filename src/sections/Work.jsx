@@ -135,7 +135,7 @@ const Work = () => {
                 </header>
                 {projects.map((project) => (
                     <button type="button" key={project.id} className="selected-works__card" onPointerUp={(event) => activatePointer(event, project)} onClick={(event) => event.detail === 0 && openFilm(project)} aria-label={`播放${project.title}完整版`} data-cursor="text" data-cursor-text="VIEW">
-                        <video ref={(node) => node ? previewRefs.current.set(project.id, node) : previewRefs.current.delete(project.id)} className="selected-works__preview" data-project-id={project.id} src={project.preview} muted autoPlay loop playsInline preload="metadata" />
+                        <video ref={(node) => node ? previewRefs.current.set(project.id, node) : previewRefs.current.delete(project.id)} className="selected-works__preview" data-project-id={project.id} src={project.preview} muted autoPlay loop playsInline preload="metadata" controlsList="nodownload noremoteplayback" disablePictureInPicture onContextMenu={(event) => event.preventDefault()} />
                         <span className="selected-works__shade" />
                         <span className="selected-works__label">
                             <span className="selected-works__play" aria-hidden="true">▶</span>
@@ -185,7 +185,7 @@ const Work = () => {
             {(activeProject || activeImage) && createPortal(
                 <div ref={lightboxRef} className="work-lightbox" role="dialog" aria-modal="true" aria-label={activeImage ? activeImage.alt : `${activeProject.title}完整版`} data-lenis-prevent onMouseDown={(event) => event.target === event.currentTarget && closeLightbox()}>
                     <button type="button" className="work-lightbox__close" onClick={closeLightbox} aria-label="关闭大图">×</button>
-                    {activeImage ? <img className="work-lightbox__image" src={activeImage.src} alt={activeImage.alt} /> : <video ref={fullVideoRef} className="work-lightbox__video" src={activeProject.full} controls autoPlay playsInline preload="metadata" />}
+                    {activeImage ? <img className="work-lightbox__image" src={activeImage.src} alt={activeImage.alt} /> : <video ref={fullVideoRef} className="work-lightbox__video" src={activeProject.full} controls controlsList="nodownload noremoteplayback" disablePictureInPicture autoPlay playsInline preload="metadata" onContextMenu={(event) => event.preventDefault()} />}
                 </div>,
                 document.body,
             )}

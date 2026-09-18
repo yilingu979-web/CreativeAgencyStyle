@@ -11,7 +11,7 @@ test('the About section renders the confirmed preview copy with a semantic title
     const markup = renderToStaticMarkup(createElement(About));
     const visibleText = markup.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
 
-    assert.match(markup, /<span[^>]*>扣寂，<\/span><wbr\s*\/?><span[^>]*>于无声处寻音<\/span>/);
+    assert.match(markup, /<span[^>]*>叩寂，<\/span><wbr\s*\/?><span[^>]*>于无声处寻音<\/span>/);
     assert.match(markup, /text-wrap:balance/);
     assert.match(visibleText, /课虚无以责有，叩寂寞而求音。我们在无声处扣问灵感/);
     assert.match(visibleText, /我们以电影思维重构数字叙事。核心团队来自北京电影学院、中央美术学院等院校/);

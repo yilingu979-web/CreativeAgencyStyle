@@ -53,7 +53,7 @@ const Hero = () => {
     return (
         <section ref={containerRef} className="hero relative flex flex-col justify-center items-center overflow-hidden bg-primary">
             <div className="hero__brand absolute z-20 font-display font-medium tracking-[0.3em]">
-                扣寂
+                叩寂
             </div>
 
             <div className="hero__visual absolute inset-0 z-0 overflow-hidden">

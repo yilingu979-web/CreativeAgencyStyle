@@ -69,7 +69,7 @@ const About = () => {
             <div ref={textRef} className="w-full md:w-1/2 md:pl-20 flex flex-col gap-6">
                 <h2 className="text-sm font-bold tracking-[0.2em] uppercase text-neutral/60">Who We Are</h2>
                 <h3 className="text-[30px] md:text-[36px] font-bold leading-[1.25] tracking-[0.02em] relative">
-                    <span className="whitespace-nowrap">扣寂，</span><wbr /><span className="whitespace-nowrap">于无声处寻音</span>
+                    <span className="whitespace-nowrap">叩寂，</span><wbr /><span className="whitespace-nowrap">于无声处寻音</span>
                 </h3>
                 <p className="text-[17px] md:text-[18px] font-sans text-neutral/80 leading-[1.72] [text-wrap:balance]">
                     课虚无以责有，叩寂寞而<span className="whitespace-nowrap">求音。</span>我们在无声处扣问灵感，于<span className="whitespace-nowrap">喧嚣</span>中沉淀视觉；让东方美学与先锋艺术，在 AI 技术和<span className="whitespace-nowrap">影像</span>叙事的交汇中产生回响。

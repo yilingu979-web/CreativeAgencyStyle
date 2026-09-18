@@ -26,12 +26,15 @@ test('card clicks keep their target until a deliberate drag begins', async () =>
   assert.match(work, /event\.detail\s*===\s*0/);
 });
 
-test('full-film player is top-level, audible, controlled, and protected from backdrop clicks', async () => {
+test('full-film player is top-level, audible, controlled without download controls, and protected from backdrop clicks', async () => {
   const work = await readSection('Work.jsx');
 
   assert.match(work, /createPortal/);
   assert.match(work, /fullVideoRef\.current\.muted\s*=\s*false/);
   assert.match(work, /controls/);
+  assert.match(work, /controlsList="nodownload noremoteplayback"/);
+  assert.match(work, /disablePictureInPicture/);
+  assert.match(work, /onContextMenu=\{\(event\) => event\.preventDefault\(\)\}/);
   assert.match(work, /event\.target\s*===\s*event\.currentTarget/);
   assert.match(work, /event\.key\s*===\s*['"]Escape['"]/);
   assert.match(work, /appRoot\.inert\s*=\s*true/);

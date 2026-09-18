@@ -142,7 +142,7 @@ const Footer = () => {
                         data-cursor="hover"
                         disabled={status === 'loading'}
                     >
-                        {status === 'loading' ? '正在发送…' : '与扣寂开启创作 ↗'}
+                        {status === 'loading' ? '正在发送…' : '与叩寂开启创作 ↗'}
                     </button>
 
                     {message && (
