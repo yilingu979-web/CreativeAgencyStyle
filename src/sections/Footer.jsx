@@ -130,8 +130,6 @@ const Footer = () => {
                             value={form.projectDescription}
                             onChange={handleChange}
                             placeholder="你想让我们一起创造什么？"
-                            minLength={10}
-                            maxLength={3000}
                             required
                         />
                     </label>

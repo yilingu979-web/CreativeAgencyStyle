@@ -4,7 +4,7 @@ const FIELD_RULES = {
     name: { label: '姓名', min: 1, max: 80 },
     company: { label: '公司', min: 1, max: 120 },
     contact: { label: '联系方式', min: 3, max: 160 },
-    projectDescription: { label: '项目描述', min: 10, max: 3000 },
+    projectDescription: { label: '项目描述', min: 1 },
 };
 
 const escapeHtml = (value) => value
@@ -37,10 +37,12 @@ export const validateContactPayload = (value) => {
         }
 
         const normalizedValue = rawValue.trim();
-        if (normalizedValue.length < rule.min || normalizedValue.length > rule.max) {
+        if (normalizedValue.length < rule.min || (rule.max && normalizedValue.length > rule.max)) {
             return {
                 ok: false,
-                error: `${rule.label}长度需要在 ${rule.min}–${rule.max} 个字符之间。`,
+                error: rule.max
+                    ? `${rule.label}长度需要在 ${rule.min}–${rule.max} 个字符之间。`
+                    : `请填写${rule.label}。`,
             };
         }
 

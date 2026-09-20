@@ -35,8 +35,7 @@ test('rejects missing, short, and oversized fields', () => {
         { ...validPayload, name: '' },
         { ...validPayload, company: 'x'.repeat(121) },
         { ...validPayload, contact: 'ab' },
-        { ...validPayload, projectDescription: '太短' },
-        { ...validPayload, projectDescription: 'x'.repeat(3001) },
+        { ...validPayload, projectDescription: '' },
     ];
 
     for (const payload of cases) {
@@ -263,4 +262,13 @@ test('contact handler reserves an in-flight fingerprint before awaiting Resend',
     assert.equal(providerCalls, 1);
     assert.equal(firstResponse.statusCode, 200);
     assert.equal(duplicateResponse.statusCode, 429);
+});
+
+test('accepts a long multi-paragraph project description unchanged', () => {
+    const longDescription = `${'第一段需求。'.repeat(1200)}\n\n第二段补充。`;
+    const result = validateContactPayload({ ...validPayload, projectDescription: longDescription });
+
+    assert.equal(result.ok, true);
+    assert.equal(result.data.projectDescription, longDescription);
+    assert.match(buildContactEmail(result.data, '2026-09-20T00:00:00.000Z').text, /第二段补充。/);
 });

@@ -7,7 +7,7 @@ import { Buffer } from 'node:buffer';
 
 const CONTACT_RECIPIENT = 'postmaster@koujikeji.com';
 const DUPLICATE_WINDOW_MS = 60_000;
-const MAX_BODY_BYTES = 16_384;
+const MAX_BODY_BYTES = 1_048_576;
 const MAX_RECENT_SUBMISSIONS = 500;
 
 const respond = (response, statusCode, payload) => response.status(statusCode).json(payload);
