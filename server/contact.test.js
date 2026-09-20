@@ -59,7 +59,7 @@ test('builds escaped email content with every field and submitted time', () => {
         projectDescription: '第一行\n第二行',
     }, submittedAt);
 
-    assert.equal(email.subject, '新的扣寂项目咨询：<林一>');
+    assert.equal(email.subject, '新的叩寂项目咨询：<林一>');
     assert.match(email.text, /姓名：<林一>/);
     assert.match(email.text, /公司：扣寂 & Co\./);
     assert.match(email.text, /联系方式：hello@example\.com/);

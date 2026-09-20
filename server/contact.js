@@ -62,7 +62,7 @@ export const buildContactEmail = (data, submittedAt) => {
     ];
 
     return {
-        subject: `新的扣寂项目咨询：${data.name}`,
+        subject: `新的叩寂项目咨询：${data.name}`,
         text: rows.map(([label, content]) => `${label}：${content}`).join('\n\n'),
         html: `<div style="font-family:Arial,'PingFang SC',sans-serif;line-height:1.7;color:#171717">${rows
             .map(([label, content]) => `<p><strong>${label}：</strong><br>${escapeHtml(content).replaceAll('\n', '<br>')}</p>`)
