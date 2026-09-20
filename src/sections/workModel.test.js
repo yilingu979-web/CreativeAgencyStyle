@@ -15,10 +15,10 @@ test('maps the four approved works to their matching preview and full videos in 
   assert.deepEqual(
     projects.map(({ title, preview, full }) => ({ title, preview, full })),
     [
-      { title: '《五菱·万物同行》', preview: '/assets/works/previews/wuling-preview.mp4', full: 'https://github.com/yilingu979-web/CreativeAgencyStyle/releases/download/selected-works-media-v1/wuling-full.mp4' },
-      { title: '《SWIM》MV', preview: '/assets/works/previews/swim-preview.mp4', full: 'https://github.com/yilingu979-web/CreativeAgencyStyle/releases/download/selected-works-media-v1/swim-full.mp4' },
-      { title: '《帝国公主》', preview: '/assets/works/previews/princess-preview.mp4', full: 'https://github.com/yilingu979-web/CreativeAgencyStyle/releases/download/selected-works-media-v1/princess-full.mov' },
-      { title: '《夏日回响》MV', preview: '/assets/works/previews/summer-preview.mp4', full: 'https://github.com/yilingu979-web/CreativeAgencyStyle/releases/download/selected-works-media-v1/summer-full.mp4' },
+      { title: '《五菱·万物同行》', preview: '/assets/works/previews/wuling-preview.mp4', full: 'https://media.koujikeji.com/works/full/wuling-full.mp4' },
+      { title: '《SWIM》MV', preview: '/assets/works/previews/swim-preview.mp4', full: 'https://media.koujikeji.com/works/full/swim-full.mp4' },
+      { title: '《帝国公主》', preview: '/assets/works/previews/princess-preview.mp4', full: 'https://media.koujikeji.com/works/full/princess-full.mp4' },
+      { title: '《夏日回响》MV', preview: '/assets/works/previews/summer-preview.mp4', full: 'https://media.koujikeji.com/works/full/summer-full.mp4' },
     ],
   );
 });
