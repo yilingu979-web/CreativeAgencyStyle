@@ -25,11 +25,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
-      - name: Build for GitHub Pages
-        run: npm run build -- --base=/CreativeAgencyStyle/
-      - name: Rewrite public media paths for the project URL
-        run: |
-          find dist -type f \( -name '*.js' -o -name '*.css' \) -print0 | xargs -0 sed -i 's#/assets/#/CreativeAgencyStyle/assets/#g'
+      - name: Build for the official domain
+        run: npm run build -- --base=/
       - uses: actions/configure-pages@v5
         with:
           enablement: true
