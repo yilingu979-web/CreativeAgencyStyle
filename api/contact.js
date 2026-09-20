@@ -4,6 +4,7 @@ import {
     validateContactPayload,
 } from '../server/contact.js';
 import { Buffer } from 'node:buffer';
+import { createDirectMailClient } from '../server/directMail.js';
 
 const CONTACT_RECIPIENT = 'postmaster@koujikeji.com';
 const DUPLICATE_WINDOW_MS = 60_000;
@@ -37,27 +38,22 @@ const readBody = (request) => {
     }
 };
 
-export const sendContactEmail = async ({ data, submittedAt, apiKey, from, fetchImpl }) => {
+export const sendContactEmail = async ({ data, submittedAt, directMailClient, from }) => {
     const email = buildContactEmail(data, submittedAt);
-    const providerResponse = await fetchImpl('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: {
-            Authorization: `Bearer ${apiKey}`,
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            from,
-            to: [CONTACT_RECIPIENT],
-            reply_to: data.contact.includes('@') ? data.contact : undefined,
-            ...email,
-        }),
+    await directMailClient.singleSendMail({
+        accountName: from,
+        toAddress: CONTACT_RECIPIENT,
+        replyToAddress: false,
+        subject: email.subject,
+        htmlBody: email.html,
+        textBody: email.text,
     });
-
-    return providerResponse.ok;
+    return true;
 };
 
 export const createContactHandler = ({
     fetchImpl = fetch,
+    directMailClient,
     env = globalThis.process?.env ?? {},
     now = () => new Date(),
 } = {}) => {
@@ -79,7 +75,13 @@ export const createContactHandler = ({
             return respond(response, 400, { ok: false, error: validation.error });
         }
 
-        if (!env.RESEND_API_KEY || !env.CONTACT_FROM_EMAIL) {
+        const client = directMailClient ?? createDirectMailClient({
+            accessKeyId: env.ALIBABA_CLOUD_ACCESS_KEY_ID,
+            accessKeySecret: env.ALIBABA_CLOUD_ACCESS_KEY_SECRET,
+            accountName: env.DIRECT_MAIL_SENDER,
+            fetchImpl,
+        });
+        if (!env.DIRECT_MAIL_SENDER || (!directMailClient && (!env.ALIBABA_CLOUD_ACCESS_KEY_ID || !env.ALIBABA_CLOUD_ACCESS_KEY_SECRET))) {
             return respond(response, 503, {
                 ok: false,
                 error: '邮件服务尚未配置，请稍后再试。',
@@ -104,9 +106,8 @@ export const createContactHandler = ({
             const delivered = await sendContactEmail({
                 data: validation.data,
                 submittedAt: currentTime.toISOString(),
-                apiKey: env.RESEND_API_KEY,
-                from: env.CONTACT_FROM_EMAIL,
-                fetchImpl,
+                directMailClient: client,
+                from: env.DIRECT_MAIL_SENDER,
             });
 
             if (!delivered) {

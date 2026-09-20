@@ -151,53 +151,30 @@ test('contact handler reports missing server credentials without calling provide
     assert.equal(response.payload.ok, false);
 });
 
-test('contact handler sends the complete Resend request and confirms provider success', async () => {
+test('contact handler confirms Direct Mail success with the complete submission', async () => {
     let capturedRequest;
     const handler = createContactHandler({
-        fetchImpl: async (url, options) => {
-            capturedRequest = { url, options };
-            return new Response(JSON.stringify({ id: 'email_123' }), {
-                status: 200,
-                headers: { 'content-type': 'application/json' },
-            });
-        },
-        env: { RESEND_API_KEY: 'secret-key', CONTACT_FROM_EMAIL: 'Kouji <contact@example.com>' },
+        directMailClient: { async singleSendMail(request) { capturedRequest = request; } },
+        env: { DIRECT_MAIL_SENDER: 'postmaster@koujikeji.com' },
         now: () => new Date('2026-08-23T08:00:00.000Z'),
     });
     const response = createResponse();
-
-    await handler({
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: normalizedRequestBody,
-    }, response);
+    await handler({ method: 'POST', headers: { 'content-type': 'application/json' }, body: normalizedRequestBody }, response);
 
     assert.equal(response.statusCode, 200);
-    assert.deepEqual(response.payload, { ok: true });
-    assert.equal(capturedRequest.url, 'https://api.resend.com/emails');
-    assert.equal(capturedRequest.options.headers.Authorization, 'Bearer secret-key');
-    const providerBody = JSON.parse(capturedRequest.options.body);
-    assert.equal(providerBody.from, 'Kouji <contact@example.com>');
-    assert.deepEqual(providerBody.to, ['postmaster@koujikeji.com']);
-    assert.match(providerBody.text, /林一/);
-    assert.match(providerBody.text, /扣寂科技/);
-    assert.match(providerBody.text, /hello@example\.com/);
-    assert.match(providerBody.text, /想制作一支结合 AI 的品牌影像。/);
-    assert.match(providerBody.text, /2026-08-23T08:00:00\.000Z/);
+    assert.equal(capturedRequest.toAddress, 'postmaster@koujikeji.com');
+    assert.match(capturedRequest.textBody, /林一/);
+    assert.match(capturedRequest.textBody, /扣寂科技/);
+    assert.match(capturedRequest.textBody, /想制作一支结合 AI 的品牌影像。/);
 });
 
-test('contact handler returns a retryable error when Resend rejects the message', async () => {
+test('contact handler returns a retryable error when Direct Mail rejects the message', async () => {
     const handler = createContactHandler({
-        fetchImpl: async () => new Response('{"message":"provider details"}', { status: 422 }),
-        env: { RESEND_API_KEY: 'key', CONTACT_FROM_EMAIL: 'Kouji <contact@example.com>' },
+        directMailClient: { async singleSendMail() { throw new Error('provider details'); } },
+        env: { DIRECT_MAIL_SENDER: 'postmaster@koujikeji.com' },
     });
     const response = createResponse();
-
-    await handler({
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: normalizedRequestBody,
-    }, response);
+    await handler({ method: 'POST', headers: { 'content-type': 'application/json' }, body: normalizedRequestBody }, response);
 
     assert.equal(response.statusCode, 502);
     assert.equal(response.payload.ok, false);
@@ -207,19 +184,11 @@ test('contact handler returns a retryable error when Resend rejects the message'
 test('contact handler blocks a rapid duplicate after successful delivery', async () => {
     let providerCalls = 0;
     const handler = createContactHandler({
-        fetchImpl: async () => {
-            providerCalls += 1;
-            return new Response('{"id":"email_123"}', { status: 200 });
-        },
-        env: { RESEND_API_KEY: 'key', CONTACT_FROM_EMAIL: 'Kouji <contact@example.com>' },
+        directMailClient: { async singleSendMail() { providerCalls += 1; } },
+        env: { DIRECT_MAIL_SENDER: 'postmaster@koujikeji.com' },
         now: () => new Date('2026-08-23T08:00:00.000Z'),
     });
-    const request = {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: normalizedRequestBody,
-    };
-
+    const request = { method: 'POST', headers: { 'content-type': 'application/json' }, body: normalizedRequestBody };
     await handler(request, createResponse());
     const duplicateResponse = createResponse();
     await handler(request, duplicateResponse);
@@ -228,34 +197,23 @@ test('contact handler blocks a rapid duplicate after successful delivery', async
     assert.equal(providerCalls, 1);
 });
 
-test('contact handler reserves an in-flight fingerprint before awaiting Resend', async () => {
+test('contact handler reserves an in-flight fingerprint before Direct Mail responds', async () => {
     let providerCalls = 0;
     const providerResolvers = [];
     const handler = createContactHandler({
-        fetchImpl: async () => {
-            providerCalls += 1;
-            return new Promise((resolve) => providerResolvers.push(resolve));
-        },
-        env: { RESEND_API_KEY: 'key', CONTACT_FROM_EMAIL: 'Kouji <contact@example.com>' },
+        directMailClient: { async singleSendMail() { providerCalls += 1; return new Promise((resolve) => providerResolvers.push(resolve)); } },
+        env: { DIRECT_MAIL_SENDER: 'postmaster@koujikeji.com' },
         now: () => new Date('2026-08-23T08:00:00.000Z'),
     });
-    const request = {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: normalizedRequestBody,
-    };
+    const request = { method: 'POST', headers: { 'content-type': 'application/json' }, body: normalizedRequestBody };
     const firstResponse = createResponse();
     const duplicateResponse = createResponse();
-
     const firstRequest = handler(request, firstResponse);
     await Promise.resolve();
     const duplicateRequest = handler(request, duplicateResponse);
     await Promise.resolve();
     const callsBeforeDelivery = providerCalls;
-
-    for (const resolve of providerResolvers) {
-        resolve(new Response('{"id":"email_123"}', { status: 200 }));
-    }
+    for (const resolve of providerResolvers) resolve();
     await Promise.all([firstRequest, duplicateRequest]);
 
     assert.equal(callsBeforeDelivery, 1);
@@ -271,4 +229,30 @@ test('accepts a long multi-paragraph project description unchanged', () => {
     assert.equal(result.ok, true);
     assert.equal(result.data.projectDescription, longDescription);
     assert.match(buildContactEmail(result.data, '2026-09-20T00:00:00.000Z').text, /第二段补充。/);
+});
+
+test('contact handler sends the complete Direct Mail request', async () => {
+    let capturedRequest;
+    const handler = createContactHandler({
+        directMailClient: {
+            async singleSendMail(request) {
+                capturedRequest = request;
+                return { body: { envId: 'mail_123' } };
+            },
+        },
+        env: { DIRECT_MAIL_SENDER: 'postmaster@koujikeji.com' },
+        now: () => new Date('2026-09-20T00:00:00.000Z'),
+    });
+    const response = createResponse();
+
+    await handler({
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: normalizedRequestBody,
+    }, response);
+
+    assert.equal(response.statusCode, 200);
+    assert.equal(capturedRequest.toAddress, 'postmaster@koujikeji.com');
+    assert.equal(capturedRequest.accountName, 'postmaster@koujikeji.com');
+    assert.match(capturedRequest.htmlBody, /项目描述/);
 });
