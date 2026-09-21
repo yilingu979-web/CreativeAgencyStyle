@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { resolveContactEndpoint } from '../lib/contactEndpoint.js';
+
+const contactEndpoint = resolveContactEndpoint(import.meta.env.VITE_CONTACT_ENDPOINT);
 
 const initialForm = {
     name: '',
@@ -26,7 +29,7 @@ const Footer = () => {
         setMessage('');
 
         try {
-            const response = await fetch('/api/contact', {
+            const response = await fetch(contactEndpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(form),
