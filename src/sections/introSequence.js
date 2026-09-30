@@ -16,7 +16,7 @@ const INTRO_CHARACTERS = [
   ['浸', '/assets/intro/immerse-family.jpg'],
 ];
 
-export function shouldUseChineseIntro(search = '', reducedMotion = false) {
+export function shouldUseChineseIntro(search, reducedMotion = false) {
   if (reducedMotion) return false;
   return true;
 }

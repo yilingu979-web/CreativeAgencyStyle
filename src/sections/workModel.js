@@ -1,4 +1,4 @@
-const fullFilmBase = 'https://media.koujikeji.com/works/full';
+const fullFilmBase = '/assets/works/full';
 
 export const projects = [
   { id: 'wuling', title: '《五菱·万物同行》', cardTitle: '五菱·万物同行', category: '广告', preview: '/assets/works/previews/wuling-preview.mp4', full: `${fullFilmBase}/wuling-full.mp4` },

@@ -3,6 +3,7 @@ import { createPortal, flushSync } from 'react-dom';
 import { isDragGesture, projects, shouldPlayPreview } from './workModel';
 import { productionServices } from './productionServices';
 import './Work.css';
+import FullVideo from './FullVideo';
 
 const Work = () => {
     const trackRef = useRef(null);
@@ -185,7 +186,7 @@ const Work = () => {
             {(activeProject || activeImage) && createPortal(
                 <div ref={lightboxRef} className="work-lightbox" role="dialog" aria-modal="true" aria-label={activeImage ? activeImage.alt : `${activeProject.title}完整版`} data-lenis-prevent onMouseDown={(event) => event.target === event.currentTarget && closeLightbox()}>
                     <button type="button" className="work-lightbox__close" onClick={closeLightbox} aria-label="关闭大图">×</button>
-                    {activeImage ? <img className="work-lightbox__image" src={activeImage.src} alt={activeImage.alt} /> : <video ref={fullVideoRef} className="work-lightbox__video" src={activeProject.full} controls controlsList="nodownload noremoteplayback" disablePictureInPicture autoPlay playsInline preload="metadata" onContextMenu={(event) => event.preventDefault()} />}
+                    {activeImage ? <img className="work-lightbox__image" src={activeImage.src} alt={activeImage.alt} /> : <FullVideo key={activeProject.id} src={activeProject.full} videoRef={fullVideoRef} />}
                 </div>,
                 document.body,
             )}

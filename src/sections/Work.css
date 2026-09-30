@@ -63,3 +63,6 @@
   .work-lightbox__video { max-width: calc(100vw - 1.5rem); max-height: calc(100vh - 5rem); }
 }
 @media (prefers-reduced-motion: reduce) { .selected-works__preview { transition: none; } }
+
+.work-lightbox__status { color: #f5f0e8; text-align: center; }
+.work-lightbox__status button { margin-top: 1rem; padding: .6rem 1.2rem; border: 1px solid currentColor; border-radius: .25rem; cursor: pointer; }
