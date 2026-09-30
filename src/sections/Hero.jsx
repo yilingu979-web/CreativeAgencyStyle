@@ -26,13 +26,13 @@ const Hero = () => {
                     duration: 1.5,
                     stagger: 0.1,
                     ease: 'power4.out',
-                    delay: 2.5
+                    delay: 0
                 }
             );
 
             gsap.fromTo(subtitleRef.current,
                 { y: 20, opacity: 0 },
-                { y: 0, opacity: 1, duration: 1, delay: 3.5, ease: 'power2.out' }
+                { y: 0, opacity: 1, duration: 1, delay: 0.15, ease: 'power2.out' }
             );
 
             gsap.to(containerRef.current, {
@@ -61,6 +61,8 @@ const Hero = () => {
                     src="/assets/kouji-cloud-mural.jpg"
                     alt="敦煌风格的朱红、石青与金色流云壁画"
                     className="hero__image"
+                    fetchPriority="high"
+                    decoding="async"
                 />
                 <div className="hero__shade absolute inset-0" aria-hidden="true" />
             </div>

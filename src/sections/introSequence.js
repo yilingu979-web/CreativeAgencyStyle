@@ -8,12 +8,12 @@ export const INTRO_GLYPH_METRICS = {
 export const INTRO_TEXTURE_INK_FLOOR = 0;
 
 const INTRO_CHARACTERS = [
-  ['洞', '/assets/intro/insight-haval.jpeg'],
-  ['见', '/assets/intro/insight-city.jpg'],
-  ['创', '/assets/intro/imagine-cloud-car.jpg'],
-  ['想', '/assets/intro/imagine-child.jpg'],
-  ['沉', '/assets/intro/immerse-city.jpg'],
-  ['浸', '/assets/intro/immerse-family.jpg'],
+  ['洞', '/assets/intro/insight-haval.webp'],
+  ['见', '/assets/intro/insight-city.webp'],
+  ['创', '/assets/intro/imagine-cloud-car.webp'],
+  ['想', '/assets/intro/imagine-child.webp'],
+  ['沉', '/assets/intro/immerse-city.webp'],
+  ['浸', '/assets/intro/immerse-family.webp'],
 ];
 
 export function shouldUseChineseIntro(search, reducedMotion = false) {

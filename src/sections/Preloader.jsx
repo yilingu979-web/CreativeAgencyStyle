@@ -7,6 +7,7 @@ import {
     shouldUseChineseIntro,
 } from './introSequence.js';
 import './Preloader.css';
+import { INTRO_DEADLINE_MS, shouldShowIntro } from '../lib/loadingPolicy.js';
 
 const loadImage = (src) => new Promise((resolve, reject) => {
     const image = new Image();
@@ -68,13 +69,19 @@ const Preloader = () => {
     const containerRef = useRef(null);
     const textRef = useRef(null);
     const characterRefs = useRef([]);
-    const [complete, setComplete] = useState(false);
+    const [complete, setComplete] = useState(() => {
+        try { return !shouldShowIntro(sessionStorage.getItem('kouji-intro-seen') === '1', window.matchMedia('(prefers-reduced-motion: reduce)').matches); }
+        catch { return false; }
+    });
     const reduceMotion = typeof window !== 'undefined'
         && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const isChineseIntro = typeof window !== 'undefined'
         && shouldUseChineseIntro(window.location.search, reduceMotion);
 
     useEffect(() => {
+        if (complete || reduceMotion) return undefined;
+        const deadline = setTimeout(() => setComplete(true), INTRO_DEADLINE_MS);
+        try { sessionStorage.setItem('kouji-intro-seen', '1'); } catch { /* Storage may be unavailable. */ }
         if (isChineseIntro) {
             const characters = characterRefs.current.filter(Boolean);
             const inkLayers = characters.map((element) => element.querySelector('.intro-preview__ink'));
@@ -83,15 +90,15 @@ const Preloader = () => {
             let cancelled = false;
 
             Promise.all([
-                document.fonts.ready,
                 ...sequence.map((item) => loadImage(item.texture)),
-            ]).then(([, ...images]) => {
+            ]).then((images) => {
                 if (cancelled) return;
                 characters.forEach((element, index) => {
                     renderGlyphCanvases(element, sequence[index].label, images[index]);
                 });
 
                 tl = gsap.timeline({ onComplete: () => setComplete(true) });
+                tl.timeScale(4);
                 gsap.set(characters, { opacity: 0, y: 20 });
 
                 sequence.forEach((item, index) => {
@@ -119,6 +126,7 @@ const Preloader = () => {
             });
 
             return () => {
+                clearTimeout(deadline);
                 cancelled = true;
                 if (tl) tl.kill();
             };
@@ -155,8 +163,8 @@ const Preloader = () => {
             delay: 0.2
         });
 
-        return () => tl.kill();
-    }, [isChineseIntro, reduceMotion]);
+        return () => { clearTimeout(deadline); tl.kill(); };
+    }, [isChineseIntro, reduceMotion, complete]);
 
     if (complete || reduceMotion) return null;
 

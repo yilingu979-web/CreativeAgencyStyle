@@ -4,6 +4,7 @@ import { isDragGesture, projects, shouldPlayPreview } from './workModel';
 import { productionServices } from './productionServices';
 import './Work.css';
 import FullVideo from './FullVideo';
+import { loadPreviewOnce } from '../lib/loadingPolicy.js';
 
 const Work = () => {
     const trackRef = useRef(null);
@@ -35,7 +36,7 @@ const Work = () => {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
                 const id = entry.target.dataset.projectId;
-                if (entry.isIntersecting) visiblePreviews.current.add(id);
+                if (entry.isIntersecting) { loadPreviewOnce(entry.target); visiblePreviews.current.add(id); }
                 else visiblePreviews.current.delete(id);
             });
             syncPreviews();
@@ -136,7 +137,7 @@ const Work = () => {
                 </header>
                 {projects.map((project) => (
                     <button type="button" key={project.id} className="selected-works__card" onPointerUp={(event) => activatePointer(event, project)} onClick={(event) => event.detail === 0 && openFilm(project)} aria-label={`播放${project.title}完整版`} data-cursor="text" data-cursor-text="VIEW">
-                        <video ref={(node) => node ? previewRefs.current.set(project.id, node) : previewRefs.current.delete(project.id)} className="selected-works__preview" data-project-id={project.id} src={project.preview} muted autoPlay loop playsInline preload="metadata" controlsList="nodownload noremoteplayback" disablePictureInPicture onContextMenu={(event) => event.preventDefault()} />
+                        <video ref={(node) => node ? previewRefs.current.set(project.id, node) : previewRefs.current.delete(project.id)} className="selected-works__preview" data-project-id={project.id} data-src={project.preview} muted loop playsInline preload="none" controlsList="nodownload noremoteplayback" disablePictureInPicture onContextMenu={(event) => event.preventDefault()} />
                         <span className="selected-works__shade" />
                         <span className="selected-works__label">
                             <span className="selected-works__play" aria-hidden="true">▶</span>
