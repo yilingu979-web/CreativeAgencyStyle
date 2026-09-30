@@ -46,18 +46,17 @@ const renderGlyphCanvases = (element, label, image) => {
     maskContext.fillStyle = '#000';
     maskContext.fillText(label, bounds.textX, bounds.textY);
 
-    const scale = Math.max(bounds.width / image.naturalWidth, bounds.height / image.naturalHeight);
-    const imageWidth = image.naturalWidth * scale;
-    const imageHeight = image.naturalHeight * scale;
-    textureContext.drawImage(
-        image,
-        (bounds.width - imageWidth) / 2,
-        (bounds.height - imageHeight) / 2,
-        imageWidth,
-        imageHeight,
-    );
-    textureContext.globalCompositeOperation = 'destination-in';
-    textureContext.drawImage(maskCanvas, 0, 0, bounds.width, bounds.height);
+    if (image) {
+        const scale = Math.max(bounds.width / image.naturalWidth, bounds.height / image.naturalHeight);
+        const imageWidth = image.naturalWidth * scale;
+        const imageHeight = image.naturalHeight * scale;
+        textureContext.drawImage(image, (bounds.width - imageWidth) / 2, (bounds.height - imageHeight) / 2, imageWidth, imageHeight);
+        textureContext.globalCompositeOperation = 'destination-in';
+        textureContext.drawImage(maskCanvas, 0, 0, bounds.width, bounds.height);
+    } else {
+        // The visible glyph exists immediately, even if the texture never loads.
+        textureContext.drawImage(maskCanvas, 0, 0, bounds.width, bounds.height);
+    }
 
     inkContext.drawImage(maskCanvas, 0, 0, bounds.width, bounds.height);
     inkContext.globalCompositeOperation = 'source-in';
@@ -70,7 +69,7 @@ const Preloader = () => {
     const textRef = useRef(null);
     const characterRefs = useRef([]);
     const [complete, setComplete] = useState(() => {
-        try { return !shouldShowIntro(sessionStorage.getItem('kouji-intro-seen') === '1', window.matchMedia('(prefers-reduced-motion: reduce)').matches); }
+        try { return !shouldShowIntro(false, window.matchMedia('(prefers-reduced-motion: reduce)').matches); }
         catch { return false; }
     });
     const reduceMotion = typeof window !== 'undefined'
@@ -81,7 +80,6 @@ const Preloader = () => {
     useEffect(() => {
         if (complete || reduceMotion) return undefined;
         const deadline = setTimeout(() => setComplete(true), INTRO_DEADLINE_MS);
-        try { sessionStorage.setItem('kouji-intro-seen', '1'); } catch { /* Storage may be unavailable. */ }
         if (isChineseIntro) {
             const characters = characterRefs.current.filter(Boolean);
             const inkLayers = characters.map((element) => element.querySelector('.intro-preview__ink'));
@@ -89,16 +87,14 @@ const Preloader = () => {
             let tl;
             let cancelled = false;
 
-            Promise.all([
-                ...sequence.map((item) => loadImage(item.texture)),
-            ]).then((images) => {
-                if (cancelled) return;
-                characters.forEach((element, index) => {
-                    renderGlyphCanvases(element, sequence[index].label, images[index]);
-                });
+            characters.forEach((element, index) => {
+                renderGlyphCanvases(element, sequence[index].label, null);
+                loadImage(sequence[index].texture).then((image) => {
+                    if (!cancelled) renderGlyphCanvases(element, sequence[index].label, image);
+                }).catch(() => { /* Keep the immediately rendered glyph on slow or failed networks. */ });
+            });
 
                 tl = gsap.timeline({ onComplete: () => setComplete(true) });
-                tl.timeScale(4);
                 gsap.set(characters, { opacity: 0, y: 20 });
 
                 sequence.forEach((item, index) => {
@@ -121,9 +117,7 @@ const Preloader = () => {
                 tl.to(containerRef.current, {
                     opacity: 0, duration: .64, ease: 'power2.inOut',
                 }, 3.24);
-            }).catch(() => {
-                if (!cancelled) setComplete(true);
-            });
+
 
             return () => {
                 clearTimeout(deadline);

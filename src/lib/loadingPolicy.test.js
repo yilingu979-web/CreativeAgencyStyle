@@ -7,9 +7,9 @@ test('offscreen previews have no media request until observed, and load only onc
  loadPreviewOnce(video); loadPreviewOnce(video);
  assert.equal(video.src,'/preview.mp4'); assert.equal(video.loads,1);
 });
-test('return visits and reduced motion skip the intro',()=>{
+test('normal visits retain the full intro; reduced motion can skip it',()=>{
  assert.equal(shouldShowIntro(false,false),true);
- assert.equal(shouldShowIntro(true,false),false);
+ assert.equal(shouldShowIntro(true,false),true);
  assert.equal(shouldShowIntro(false,true),false);
- assert.ok(INTRO_DEADLINE_MS<=1500);
+ assert.ok(INTRO_DEADLINE_MS >= 5000);
 });
