@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { resolveContactEndpoint } from '../lib/contactEndpoint.js';
+import { submitContact } from '../lib/submitContact.js';
 
-const contactEndpoint = resolveContactEndpoint(import.meta.env.VITE_CONTACT_ENDPOINT);
+const contactEndpoint = 'https://formspree.io/f/xaenvkeb';
 
 const initialForm = {
     name: '',
@@ -29,16 +29,7 @@ const Footer = () => {
         setMessage('');
 
         try {
-            const response = await fetch(contactEndpoint, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(form),
-            });
-            const result = await response.json().catch(() => ({}));
-
-            if (!response.ok || !result.ok) {
-                throw new Error(result.error || '发送失败，请稍后重试。');
-            }
+            await submitContact(contactEndpoint, form);
 
             setStatus('success');
             setMessage('已收到，我们会尽快与你联系。');
@@ -63,7 +54,7 @@ const Footer = () => {
 
                     <div className="footer-intro__details flex flex-col gap-2 text-base md:text-xl font-sans text-secondary/75">
                         <span>Koujikeji.com</span>
-                        <span>postmaster@koujikeji.com</span>
+                        <a href="mailto:postmaster@koujikeji.com">postmaster@koujikeji.com</a>
                     </div>
                 </div>
 
@@ -111,14 +102,14 @@ const Footer = () => {
                         />
                     </label>
                     <label className="block">
-                        <span className="sr-only">联系方式</span>
+                        <span className="sr-only">邮箱</span>
                         <input
                             className={fieldClassName}
-                            type="text"
+                            type="email"
                             name="contact"
                             value={form.contact}
                             onChange={handleChange}
-                            placeholder="邮箱或微信"
+                            placeholder="你的邮箱（方便我们回复）"
                             autoComplete="email"
                             minLength={3}
                             maxLength={160}
@@ -145,6 +136,9 @@ const Footer = () => {
                     >
                         {status === 'loading' ? '正在发送…' : '与叩寂开启创作 ↗'}
                     </button>
+
+                    <p className="mt-4 text-xs text-secondary/60">提交信息仅用于联系你讨论项目，由 Formspree 代为接收并转交叩寂。</p>
+                    <p className="mt-3 text-sm text-secondary/75">也可以直接发邮件至 <a className="underline" href="mailto:postmaster@koujikeji.com">postmaster@koujikeji.com</a></p>
 
                     {message && (
                         <p
